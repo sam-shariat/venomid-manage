@@ -46,36 +46,36 @@ export default function Header() {
                 <RiMenu2Fill />
               </IconButton>
             )}
-            <NextLink href="/" passHref>
-              <Button color="var(--venom1)" fontWeight="bold" variant="ghost" gap={1}>
+            <NextLink id="venomidmanagelogolink" href="/" passHref>
+              <Button id="venomidmanagelogo" color="var(--venom1)" fontWeight="bold" variant="ghost" gap={1} px={2}>
                 <Logo />
                 <Text>{notMobile ? 'VenomID' : 'VID'}.Tools</Text>
               </Button>
             </NextLink>
             {notMobile && (
               <NextLink href="https://venomid.network" passHref>
-                <Button fontWeight="noraml" variant="ghost" textAlign="left">
+                <Button variant="ghost" textAlign="left">
                   Claim VID
                 </Button>
               </NextLink>
             )}
             {notMobile && (
               <NextLink href="https://venomid.network/#profile" passHref>
-                <Button fontWeight="noraml" variant="ghost" textAlign="left">
+                <Button variant="ghost" textAlign="left">
                   Profile
                 </Button>
               </NextLink>
             )}
             {notMobile && (
               <NextLink href="https://venomid.network/#roadmap" passHref>
-                <Button fontWeight="noraml" variant="ghost" textAlign="left">
+                <Button variant="ghost" textAlign="left">
                   RoadMap
                 </Button>
               </NextLink>
             )}
             {notMobile && (
               <NextLink href="https://venomid.network/#about" passHref>
-                <Button fontWeight="noraml" variant="ghost" textAlign="left">
+                <Button variant="ghost" textAlign="left">
                   About
                 </Button>
               </NextLink>
@@ -122,22 +122,22 @@ export default function Header() {
           <DrawerBody>
             <Stack py={4}>
               <NextLink href="https://venomid.network/" passHref>
-                <Button fontWeight="noraml" variant="ghost" width="100%" justifyContent="left">
+                <Button variant="ghost" width="100%" justifyContent="left">
                   Claim VID
                 </Button>
               </NextLink>
               <NextLink href="https://venomid.network/#profile" passHref>
-                <Button fontWeight="noraml" variant="ghost" width="100%" justifyContent="left">
+                <Button variant="ghost" width="100%" justifyContent="left">
                   Profile
                 </Button>
               </NextLink>
               <NextLink href="https://venomid.network/#roadmap" passHref>
-                <Button fontWeight="noraml" variant="ghost" width="100%" justifyContent="left">
+                <Button variant="ghost" width="100%" justifyContent="left">
                   RoadMap
                 </Button>
               </NextLink>
               <NextLink href="https://venomid.network/#about" passHref>
-                <Button fontWeight="noraml" variant="ghost" width="100%" justifyContent="left">
+                <Button variant="ghost" width="100%" justifyContent="left">
                   About
                 </Button>
               </NextLink>

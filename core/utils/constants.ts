@@ -10,3 +10,4 @@ export const ETHERSCAN_ADDRESS = "https://etherscan.io/address/"
 export const CONTRACT_ADDRESS = "0:247682756b04b9e2290fd1801bcd7cd9ab5e46a167ff339e3e176355b5db4901";
 export const SOCIAL_TWITTER = "venomid_network";
 export const TWITTER_URL = "https://twitter.com/";
+export const GITHUB_URL = "https://github.com/samshariat/venomidapp-manage";

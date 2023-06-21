@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Address, ProviderRpcClient } from 'everscale-inpage-provider';
-import { CONTRACT_ADDRESS, SITE_MANAGE_URL } from 'core/utils/constants';
+import { CONTRACT_ADDRESS, SITE_URL } from 'core/utils/constants';
 // Our implemented util
 import { BaseNftJson, getNftsByIndexes } from 'core/utils/nft';
 import { venomContractAtom, venomSProviderAtom, addressAtom, isConnectedAtom } from 'core/atoms';
@@ -153,7 +153,7 @@ function ManageSection() {
                       View NFT
                     </Button>
                   </Link>
-                  <Link href={SITE_MANAGE_URL} target="_blank" id={`venom-id-manage-nft-link`}>
+                  <Link href={SITE_URL} target="_blank" id={`venom-id-manage-nft-link`}>
                     <Button m={1} minWidth={120} bgColor={'var(--purple0)'}>
                       Manage VID
                     </Button>
@@ -162,7 +162,7 @@ function ManageSection() {
               )}
             </Alert>
           )}
-          <Stack direction={['column']} pb={6} pt={notMobile ? 10 : 6} width="100%" gap={2}>
+          <Stack direction={['column']} pb={4} pt={notMobile ? 10 : 6} width="100%" gap={2}>
             <Text
               width={'100%'}
               textAlign={'center'}

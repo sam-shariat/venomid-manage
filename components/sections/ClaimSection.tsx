@@ -31,7 +31,7 @@ import VenomAbi from 'abi/Collection.abi.json';
 import { useAtom, useAtomValue } from 'jotai';
 import { useTranslate } from 'core/lib/hooks/use-translate';
 import Venom from 'components/Venom';
-import { VENOMSCAN_NFT, SITE_PROFILE_URL, SITE_MANAGE_URL } from 'core/utils/constants';
+import { VENOMSCAN_NFT, SITE_PROFILE_URL } from 'core/utils/constants';
 import { Address, Transaction } from 'everscale-inpage-provider';
 
 interface Message {
@@ -261,14 +261,7 @@ export default function ClaimSection() {
                       View NFT
                     </Button>
                   </Link>
-                  <Link
-                    href={SITE_MANAGE_URL + claimedName}
-                    target="_blank"
-                    id={`venom-id-manage-nft-link`}>
-                    <Button m={1} minWidth={120} bgColor={'var(--purple0)'}>
-                      Manage VID
-                    </Button>
-                  </Link>
+                  
                 </Box>
               )}
             </Alert>

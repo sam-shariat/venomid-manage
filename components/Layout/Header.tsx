@@ -46,7 +46,7 @@ export default function Header() {
                 <RiMenu2Fill />
               </IconButton>
             )}
-            <NextLink id="venomidmanagelogolink" href="/" passHref>
+            <NextLink href="/" passHref>
               <Button id="venomidmanagelogo" color="var(--venom1)" fontWeight="bold" variant="ghost" gap={1} px={2}>
                 <Logo />
                 <Text>{notMobile ? 'VenomID' : 'VID'}.Tools</Text>

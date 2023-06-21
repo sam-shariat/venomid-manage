@@ -186,7 +186,7 @@ function ManageSection() {
                 borderColor={'blackAlpha.200'}
                 borderWidth={1}
                 p={3}
-                py={6}
+                py={4}
                 borderRadius={12}>
                 <Flex minW={350} key={nft.name + ' name'} color={'var(--venom1)'} fontWeight={'bold'} fontSize={'2xl'} gap={2} justifyContent={'space-between'} my={2}>
                 {nft.name}<Logo /> 
@@ -197,7 +197,7 @@ function ManageSection() {
                   </Button>
                 </Link>
                 <Link href={nft.external_url} target="_blank">
-                  <Button minW={350} size='lg' gap={2}>{nft.external_url?.slice(8)}</Button>
+                  <Button minW={350} gap={2}>{nft.external_url?.slice(8)}</Button>
                 </Link>
               </Center>
             ))}

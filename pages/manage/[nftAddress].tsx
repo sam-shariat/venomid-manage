@@ -197,6 +197,7 @@ const ManagePage: NextPage = () => {
         setIsLoading(true);
         try {
           if (!provider?.isInitialized) return;
+          console.log('getting nft : ',nftAddress)
           const nftJson = await getNft(provider,new Address(nftAddress));
           console.log('nftJson : ',nftJson);
           const ipfsData = nftJson.attributes?.find((att) => att.trait_type === 'DATA')?.value;
@@ -223,7 +224,7 @@ const ManagePage: NextPage = () => {
       }
     }
     getProfileJson();
-  }, [userAddress]);
+  }, [userAddress,isConnected]);
 
   return (
     <>

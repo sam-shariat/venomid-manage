@@ -54,11 +54,6 @@ import { SITE_DESCRIPTION, SITE_TITLE, VENOMSCAN_NFT } from 'core/utils/constant
 import { ConnectButton } from 'components/venomConnect';
 import { getNft } from 'core/utils/nft';
 
-const PINATA_API_KEY = 'dcca70e972f1baccb51e';
-const PINATA_API_SECRET = '53499a4c990104e74e67c06c8b694554862f1df2979646d64b5e6ab343c9b981';
-const PINATA_JWT =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySW5mb3JtYXRpb24iOnsiaWQiOiJmYTI2NzQ2NS0wNDJhLTRkZTMtYjM4NC1mMDUwMTI1MjllYTEiLCJlbWFpbCI6InNhbXNoYXJpYXQ3QGdtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJwaW5fcG9saWN5Ijp7InJlZ2lvbnMiOlt7ImlkIjoiRlJBMSIsImRlc2lyZWRSZXBsaWNhdGlvbkNvdW50IjoxfV0sInZlcnNpb24iOjF9LCJtZmFfZW5hYmxlZCI6ZmFsc2UsInN0YXR1cyI6IkFDVElWRSJ9LCJhdXRoZW50aWNhdGlvblR5cGUiOiJzY29wZWRLZXkiLCJzY29wZWRLZXlLZXkiOiJkY2NhNzBlOTcyZjFiYWNjYjUxZSIsInNjb3BlZEtleVNlY3JldCI6IjUzNDk5YTRjOTkwMTA0ZTc0ZTY3YzA2YzhiNjk0NTU0ODYyZjFkZjI5Nzk2NDZkNjRiNWU2YWIzNDNjOWI5ODEiLCJpYXQiOjE2NjQyMzMwOTd9.MStisWxVXiMIx_RiKQqu6Ddc6jzNADZnFIFQaGcNIFk';
-
 const ManagePage: NextPage = () => {
   const { t } = useTranslate();
   const [name, setName] = useAtom(nameAtom);
@@ -118,9 +113,9 @@ const ManagePage: NextPage = () => {
         url: 'https://api.pinata.cloud/pinning/pinJSONToIPFS',
         data: data,
         headers: {
-          Authorization: `Bearer ${PINATA_JWT}`,
-          pinata_api_key: `${PINATA_API_KEY}`,
-          pinata_secret_api_key: `${PINATA_API_SECRET}`,
+          Authorization: `Bearer ${process.env.PINATA_JWT}`,
+          pinata_api_key: `${process.env.PINATA_API_KEY}`,
+          pinata_secret_api_key: `${process.env.PINATA_API_SECRET}`,
           'Content-Type': 'application/json',
         },
       });
@@ -149,9 +144,9 @@ const ManagePage: NextPage = () => {
           url: 'https://api.pinata.cloud/pinning/pinFileToIPFS',
           data: formData,
           headers: {
-            Authorization: `Bearer ${PINATA_JWT}`,
-            pinata_api_key: `${PINATA_API_KEY}`,
-            pinata_secret_api_key: `${PINATA_API_SECRET}`,
+            Authorization: `Bearer ${process.env.PINATA_JWT}`,
+            pinata_api_key: `${process.env.PINATA_API_KEY}`,
+            pinata_secret_api_key: `${process.env.PINATA_API_SECRET}`,
             'Content-Type': 'multipart/form-data',
           },
         });

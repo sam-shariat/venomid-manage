@@ -91,7 +91,7 @@ const ManagePage: NextPage = () => {
   const authClient = new auth.OAuth2User({
     client_id: process.env.TWITTER_CLIENT_ID as string,
     client_secret: process.env.TWITTER_CLIENT_SECRET as string,
-    callback: "http://localhost:3000/manage/"+nftAddress,
+    callback: "https://venomid.tools/manage/"+nftAddress,
     scopes: ["tweet.read", "users.read", "offline.access"],
   });
 

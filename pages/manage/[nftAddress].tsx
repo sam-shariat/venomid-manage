@@ -227,22 +227,7 @@ const ManagePage: NextPage = () => {
     getProfileJson();
   }, [userAddress,isConnected,provider]);
 
-  useEffect(()=>{
-    async function checkTwitterVerify(){
-      try {
-        const { code, state } = router.query;
-        if(!code && !state) return
-        if (state !== address) {
-           console.log('state not match')
-           return
-        } 
-        await authClient.requestAccessToken(code as string);
-        console.log('access token requested')
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  },[router])
+  
 
   return (
     <>

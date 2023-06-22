@@ -92,11 +92,11 @@ function ManageSection() {
 
   // Main method of this component
   const loadNFTs = async () => {
-    setIsLoading(true);
-    setListIsEmpty(false);
     try {
       // Take a salted code
       if (!provider?.isInitialized) return;
+      setIsLoading(true);
+      setListIsEmpty(false);
       const saltedCode = await saltCode();
       // Hash it
       const codeHash = await provider.getBocHash(String(saltedCode));
@@ -121,19 +121,21 @@ function ManageSection() {
     }
   };
   useEffect(() => {
-    async function getNfts(){
-      if (userAddress && isConnected && nftjsons?.length === 0) {
+    async function getNfts() {
+      if (userAddress && isConnected && provider) {
         if (!provider?.isInitialized) {
-          console.log('provider not ready')
+          console.log('provider not ready');
           await sleep(1000);
           getNfts();
-          return
+          return;
         }
-      } loadNFTs();
+      }
+
+      loadNFTs();
       if (!userAddress) setListIsEmpty(false);
     }
     getNfts();
-  }, [userAddress,isConnected,provider]);
+  }, [userAddress, isConnected, provider]);
   return (
     <Box>
       <Container
@@ -200,16 +202,27 @@ function ManageSection() {
                 p={3}
                 py={4}
                 borderRadius={12}>
-                <Flex minW={350} key={nft.name + ' name'} color={'var(--venom1)'} fontWeight={'bold'} fontSize={'2xl'} gap={2} justifyContent={'space-between'} my={2}>
-                {nft.name}<Logo /> 
+                <Flex
+                  minW={350}
+                  key={nft.name + ' name'}
+                  color={'var(--venom1)'}
+                  fontWeight={'bold'}
+                  fontSize={'2xl'}
+                  gap={2}
+                  justifyContent={'space-between'}
+                  my={2}>
+                  {nft.name}
+                  <Logo />
                 </Flex>
-                <NextLink href={'manage/'+nft.address} passHref>
+                <NextLink href={'manage/' + nft.address} passHref>
                   <Button bgColor={'var(--purple0)'} minW={350}>
                     Manage {nft.name}
                   </Button>
                 </NextLink>
                 <Link href={nft.external_url} target="_blank">
-                  <Button minW={350} gap={2}>{nft.external_url?.slice(8)}</Button>
+                  <Button minW={350} gap={2}>
+                    {nft.external_url?.slice(8)}
+                  </Button>
                 </Link>
               </Center>
             ))}

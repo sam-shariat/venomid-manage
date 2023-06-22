@@ -25,8 +25,9 @@ import {
   RiInstagramLine,
   RiSailboatLine,
 } from 'react-icons/ri';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import {
+  addressAtom,
   discordAtom,
   facebookAtom,
   githubAtom,
@@ -40,12 +41,19 @@ import {
   youtubeAtom,
 } from 'core/atoms';
 
+import { Client } from "twitter-api-sdk";
+
 interface Props {
   json: any;
+  nftAddress: string;
+  authClient: any;
 }
 
-export default function ManageSocials({ json }: Props) {
+export default function ManageSocials({ json, nftAddress, authClient }: Props) {
+  const client = new Client(authClient);
+  
   const [twitter, setTwitter] = useAtom(twitterAtom);
+  const wallet = useAtomValue(addressAtom);
   const [discord, setDiscord] = useAtom(discordAtom);
   const [medium, setMedium] = useAtom(mediumAtom);
   const [linkedin, setLinkedin] = useAtom(linkedinAtom);
@@ -56,6 +64,15 @@ export default function ManageSocials({ json }: Props) {
   const [opensea, setOpensea] = useAtom(openseaAtom);
   const [telegram, setTelegram] = useAtom(telegramAtom);
   const [facebook, setFacebook] = useAtom(facebookAtom);
+
+  function verifyTwitter(){
+    console.log('verifying twitter');
+    const authUrl = authClient.generateAuthURL({
+      state: wallet,
+      code_challenge_method: "s256",
+    });
+    window.open(authUrl,'_blank');
+  }
 
   useEffect(() => {
     setTwitter(json.socials.twitter);
@@ -77,6 +94,7 @@ export default function ManageSocials({ json }: Props) {
         icon={json.lineIcons ? <RiTwitterLine size="28" /> : <RiTwitterFill size="28" />}
         title="Twitter"
         url={twitter}
+        verify={verifyTwitter}
         setUrl={setTwitter}
       />
       <ManageLink

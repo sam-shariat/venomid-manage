@@ -5,6 +5,7 @@ import { CONTRACT_ADDRESS, SITE_URL } from 'core/utils/constants';
 import { BaseNftJson, getNftsByIndexes } from 'core/utils/nft';
 import { venomContractAtom, venomSProviderAtom, addressAtom, isConnectedAtom } from 'core/atoms';
 import { useAtom, useAtomValue } from 'jotai';
+import NextLink from 'next/link';
 import {
   Button,
   Container,
@@ -29,6 +30,7 @@ import {
 } from '@chakra-ui/react';
 import { useTranslate } from 'core/lib/hooks/use-translate';
 import Logo from 'components/Layout/Logo';
+import { sleep } from 'core/utils';
 
 interface Message {
   type: any;
@@ -119,9 +121,19 @@ function ManageSection() {
     }
   };
   useEffect(() => {
-    if (userAddress && isConnected) loadNFTs();
-    if (!userAddress) setListIsEmpty(false);
-  }, [userAddress]);
+    async function getNfts(){
+      if (userAddress && isConnected && nftjsons?.length === 0) {
+        if (!provider?.isInitialized) {
+          console.log('provider not ready')
+          await sleep(1000);
+          getNfts();
+          return
+        }
+      } loadNFTs();
+      if (!userAddress) setListIsEmpty(false);
+    }
+    getNfts();
+  }, [userAddress,isConnected,provider]);
   return (
     <Box>
       <Container
@@ -191,11 +203,11 @@ function ManageSection() {
                 <Flex minW={350} key={nft.name + ' name'} color={'var(--venom1)'} fontWeight={'bold'} fontSize={'2xl'} gap={2} justifyContent={'space-between'} my={2}>
                 {nft.name}<Logo /> 
                 </Flex>
-                <Link href={'manage/'+nft.address}>
+                <NextLink href={'manage/'+nft.address} passHref>
                   <Button bgColor={'var(--purple0)'} minW={350}>
                     Manage {nft.name}
                   </Button>
-                </Link>
+                </NextLink>
                 <Link href={nft.external_url} target="_blank">
                   <Button minW={350} gap={2}>{nft.external_url?.slice(8)}</Button>
                 </Link>

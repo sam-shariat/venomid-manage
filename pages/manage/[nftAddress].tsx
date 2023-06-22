@@ -3,6 +3,7 @@ import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Address, ProviderRpcClient } from 'everscale-inpage-provider';
+import { Client, auth } from "twitter-api-sdk";
 import {
   useMediaQuery,
   useColorMode,
@@ -22,7 +23,7 @@ import {
 import { VenomFoundation, BTC, ETH } from 'components/logos';
 import { useTranslate } from 'core/lib/hooks/use-translate';
 import { Avatar } from 'components/Profile';
-import { truncAddress } from 'core/utils';
+import { sleep, truncAddress } from 'core/utils';
 import axios from 'axios';
 import ManageSocials from 'components/manage/ManageSocials';
 import { useAtom, useAtomValue } from 'jotai';
@@ -86,6 +87,13 @@ const ManagePage: NextPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter()
   const nftAddress = String(router.query.nftAddress) ;
+
+  const authClient = new auth.OAuth2User({
+    client_id: process.env.TWITTER_CLIENT_ID as string,
+    client_secret: process.env.TWITTER_CLIENT_SECRET as string,
+    callback: "http://localhost:3000/manage/"+nftAddress,
+    scopes: ["tweet.read", "users.read", "offline.access"],
+  });
 
   function buildFileSelector() {
     if (process.browser) {
@@ -188,11 +196,16 @@ const ManagePage: NextPage = () => {
 
   useEffect(() => {
     async function getProfileJson() {
-      if (userAddress && isConnected) {
-        setIsLoading(true);
+      if (userAddress && isConnected && provider) {
         try {
-          if (!provider?.isInitialized) return;
+          if (provider?.isInitialized === false) {
+            console.log('provider not ready')
+            await sleep(1000);
+            getProfileJson();
+            return
+          }
           console.log('getting nft : ',nftAddress)
+          setIsLoading(true);
           const nftJson = await getNft(provider,new Address(nftAddress));
           console.log('nftJson : ',nftJson);
           const ipfsData = nftJson.attributes?.find((att) => att.trait_type === 'DATA')?.value;
@@ -214,12 +227,30 @@ const ManagePage: NextPage = () => {
           setAvatar(res.data.avatar);
           setIsLoading(false);
         } catch (error) {
+          console.log("error fetching nft",error)
           setIsLoading(false);
         }
       }
     }
     getProfileJson();
-  }, [userAddress,isConnected]);
+  }, [userAddress,isConnected,provider]);
+
+  useEffect(()=>{
+    async function checkTwitterVerify(){
+      try {
+        const { code, state } = router.query;
+        if(!code && !state) return
+        if (state !== address) {
+           console.log('state not match')
+           return
+        } 
+        await authClient.requestAccessToken(code as string);
+        console.log('access token requested')
+      } catch (error) {
+        console.log(error);
+      }
+    }
+  },[router])
 
   return (
     <>
@@ -323,7 +354,7 @@ const ManagePage: NextPage = () => {
               value={json ? bio : 'Loading'}
               onChange={(e) => setBio(e.currentTarget.value)}
             />
-            {!isLoading && <ManageSocials json={json} />}
+            {!isLoading && <ManageSocials authClient={authClient} json={json} nftAddress={nftAddress}/>}
             <Button
               mt={10}
               width={notMobile ? 'md' : 'xs'}

@@ -277,18 +277,17 @@ const ManagePage: NextPage = () => {
           placeItems="center"
           minH="75vh">
           <>
+            <Heading fontWeight="bold" fontSize="2xl" my={4} mt={10} textShadow="0 0 20px #00000070">
+              {!isLoading ? json.name : 'Loading Venom ID'}
+            </Heading>
             {avatar ? <Avatar url={avatar} /> : <Avatar url={'/logos/vidbg.svg'} />}
             <Button
-              isLoading={avatarUploading}
-              my={4}
+              isLoading={avatarUploading || isLoading}
+              mb={4}
               backgroundColor="var(--venom1)"
               onClick={() => imageFileSelect !== undefined && imageFileSelect.click()}>
               Select Avatar Image
             </Button>
-
-            <Heading fontWeight="bold" fontSize="2xl" my={4}>
-              {!isLoading ? json.name : 'Loading Venom ID'}
-            </Heading>
             {!isLoading ? (
               <Flex mt={6} direction={'column'} gap={4} width="100%">
                 <Link
@@ -340,10 +339,10 @@ const ManagePage: NextPage = () => {
                 <Spinner size="lg" />
               </Center>
             )}
-            <Text mt={10} fontWeight="bold" fontSize="xl">
+            {!isLoading && <Text mt={10} fontWeight="bold" fontSize="xl">
               Bio & Socials
-            </Text>
-            <Textarea
+            </Text>}
+            {!isLoading && <Textarea
               minWidth="xs"
               my={4}
               rows={4}
@@ -353,8 +352,8 @@ const ManagePage: NextPage = () => {
               resize={'none'}
               value={json ? bio : 'Loading'}
               onChange={(e) => setBio(e.currentTarget.value)}
-            />
-            {!isLoading && <ManageSocials authClient={authClient} json={json} nftAddress={nftAddress}/>}
+            />}
+            {!isLoading && <ManageSocials json={json} nftAddress={nftAddress}/>}
             <Button
               mt={10}
               width={notMobile ? 'md' : 'xs'}

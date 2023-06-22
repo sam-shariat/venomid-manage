@@ -57,9 +57,7 @@ export default function ManageLink({ title, icon, url, setUrl, verify }: Props) 
                 onChange={(e) => setUrl(e.currentTarget.value)}
               />
             ) : (
-              <Text my={2}>
-                {url}
-              </Text>
+              <Text my={2}>{url}</Text>
             )}
             <Button
               disabled={verify === undefined}
@@ -71,6 +69,7 @@ export default function ManageLink({ title, icon, url, setUrl, verify }: Props) 
                 </Badge>
               )}
             </Button>
+            
           </Stack>
         </AccordionPanel>
       </AccordionItem>

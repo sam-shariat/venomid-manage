@@ -4,30 +4,35 @@ import { fetcher } from 'core/utils';
 import ThemeProvider from 'components/Provider/ThemeProvider';
 import Layout from 'components/Layout';
 import { useDirectionSetter } from 'core/lib/hooks/use-directionSetter';
-
+import { SessionProvider } from 'next-auth/react';
+import type { Session } from 'next-auth';
 import '../styles/globals.css';
 
-function MyApp({ Component, pageProps }: AppProps) {
+function MyApp({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps<{ session: Session }>) {
   useDirectionSetter();
 
   return (
-    <ThemeProvider>
-      <SWRConfig
-        value={{
-          fetcher,
-          provider: () => new Map(),
-          onError: (error, key) => {
-            /**
-             * Handle error globaly from SWR
-             */
-          },
-        }}
-      >
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
-      </SWRConfig>
-    </ThemeProvider>
+    <SessionProvider session={session}>
+      <ThemeProvider>
+        <SWRConfig
+          value={{
+            fetcher,
+            provider: () => new Map(),
+            onError: (error, key) => {
+              /**
+               * Handle error globaly from SWR
+               */
+            },
+          }}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </SWRConfig>
+      </ThemeProvider>
+    </SessionProvider>
   );
 }
 

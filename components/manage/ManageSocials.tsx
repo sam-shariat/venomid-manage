@@ -1,6 +1,7 @@
 import { Stack } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import ManageLink from 'components/manage/ManageLink';
+import { signIn, signOut, useSession } from "next-auth/react"
 import {
   RiTwitterFill,
   RiTelegramFill,
@@ -41,17 +42,12 @@ import {
   youtubeAtom,
 } from 'core/atoms';
 
-import { Client } from "twitter-api-sdk";
-
 interface Props {
   json: any;
   nftAddress: string;
-  authClient: any;
 }
 
-export default function ManageSocials({ json, nftAddress, authClient }: Props) {
-  const client = new Client(authClient);
-  
+export default function ManageSocials({ json, nftAddress }: Props) {
   const [twitter, setTwitter] = useAtom(twitterAtom);
   const wallet = useAtomValue(addressAtom);
   const [discord, setDiscord] = useAtom(discordAtom);
@@ -64,14 +60,12 @@ export default function ManageSocials({ json, nftAddress, authClient }: Props) {
   const [opensea, setOpensea] = useAtom(openseaAtom);
   const [telegram, setTelegram] = useAtom(telegramAtom);
   const [facebook, setFacebook] = useAtom(facebookAtom);
+  const { data: session, status } = useSession()
 
   function verifyTwitter(){
     console.log('verifying twitter');
-    const authUrl = authClient.generateAuthURL({
-      state: wallet,
-      code_challenge_method: "s256",
-    });
-    window.open(authUrl,'_blank');
+    window.open(`/api/auth/signin`,'_blank');
+    signIn()
   }
 
   useEffect(() => {
@@ -97,6 +91,13 @@ export default function ManageSocials({ json, nftAddress, authClient }: Props) {
         verify={verifyTwitter}
         setUrl={setTwitter}
       />
+      <a
+                href={`/api/auth/signin`}
+                onClick={(e) => {
+                  e.preventDefault()
+                  signIn()
+                }}
+              >sign in</a>
       <ManageLink
         icon={json.lineIcons ? <RiDiscordLine size="28" /> : <RiDiscordFill size="28" />}
         title="Discord"

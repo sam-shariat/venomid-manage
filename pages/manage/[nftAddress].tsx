@@ -3,7 +3,6 @@ import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Address, ProviderRpcClient } from 'everscale-inpage-provider';
-import { Client, auth } from "twitter-api-sdk";
 import {
   useMediaQuery,
   useColorMode,
@@ -87,13 +86,6 @@ const ManagePage: NextPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const router = useRouter()
   const nftAddress = String(router.query.nftAddress) ;
-
-  const authClient = new auth.OAuth2User({
-    client_id: process.env.TWITTER_CLIENT_ID as string,
-    client_secret: process.env.TWITTER_CLIENT_SECRET as string,
-    callback: "https://venomid.tools/manage/"+nftAddress,
-    scopes: ["tweet.read", "users.read", "offline.access"],
-  });
 
   function buildFileSelector() {
     if (process.browser) {

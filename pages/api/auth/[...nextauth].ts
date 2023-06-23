@@ -9,16 +9,16 @@ export const authOptions: NextAuthOptions = {
   // https://next-auth.js.org/configuration/providers/oauth
   providers: [
     GithubProvider({
-      clientId: process.env.GITHUB_ID ? String(process.env.GITHUB_ID) : 'github_client_id',
-      clientSecret: process.env.GITHUB_SECRET ? String(process.env.GITHUB_SECRET) : 'github_client_secret',
+      clientId: process.env.GITHUB_ID ? String(process.env.NEXT_PUBLIC_GITHUB_ID) : 'github_client_id',
+      clientSecret: process.env.GITHUB_SECRET ? String(process.env.NEXT_PUBLIC_GITHUB_SECRET) : 'github_client_secret',
     }),
     // GoogleProvider({
     //   clientId: process.env.GOOGLE_ID,
     //   clientSecret: process.env.GOOGLE_SECRET,
     // }),
     TwitterProvider({
-      clientId: String(process.env.TWITTER_ID),
-      clientSecret: String(process.env.TWITTER_SECRET)
+      clientId: String(process.env.NEXT_PUBLIC_TWITTER_ID),
+      clientSecret: String(process.env.NEXT_PUBLIC_TWITTER_SECRET)
     }),
   ],
   callbacks: {

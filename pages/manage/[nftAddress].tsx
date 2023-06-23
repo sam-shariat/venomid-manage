@@ -122,9 +122,9 @@ const ManagePage: NextPage = () => {
         url: 'https://api.pinata.cloud/pinning/pinJSONToIPFS',
         data: data,
         headers: {
-          Authorization: `Bearer ${process.env.PINATA_JWT}`,
-          pinata_api_key: `${process.env.PINATA_API_KEY}`,
-          pinata_secret_api_key: `${process.env.PINATA_API_SECRET}`,
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
+          pinata_api_key: `${process.env.NEXT_PUBLIC_PINATA_API_KEY}`,
+          pinata_secret_api_key: `${process.env.NEXT_PUBLIC_PINATA_API_SECRET}`,
           'Content-Type': 'application/json',
         },
       });
@@ -246,9 +246,9 @@ const ManagePage: NextPage = () => {
           url: 'https://api.pinata.cloud/pinning/pinFileToIPFS',
           data: formData,
           headers: {
-            Authorization: `Bearer ${process.env.PINATA_JWT}`,
-            pinata_api_key: `${process.env.PINATA_API_KEY}`,
-            pinata_secret_api_key: `${process.env.PINATA_API_SECRET}`,
+            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
+            pinata_api_key: `${process.env.NEXT_PUBLIC_PINATA_API_KEY}`,
+            pinata_secret_api_key: `${process.env.NEXT_PUBLIC_PINATA_API_SECRET}`,
             'Content-Type': 'multipart/form-data',
           },
         });

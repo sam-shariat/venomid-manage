@@ -27,8 +27,8 @@ import { Locale } from 'translations';
 import { useEffect } from 'react';
 
 export default function Header() {
-  const { colorMode, toggleColorMode } = useColorMode();
   const [colorM,setColorM] = useAtom(colorModeAtom)
+  const { colorMode, toggleColorMode } = useColorMode();
   const [locale, setLocale] = useAtom(localeAtom);
   const [notMobile] = useMediaQuery('(min-width: 800px)');
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -37,7 +37,7 @@ export default function Header() {
     if(colorMode !== colorM){
       toggleColorMode();
     }
-  },[])
+  },[colorMode])
   return (
     <Box
       as="nav"
@@ -118,7 +118,7 @@ export default function Header() {
               <IconButton
                 variant="ghost"
                 aria-label="theme"
-                onClick={toggleColorMode}
+                onClick={()=> {setColorM(colorMode === 'light' ? 'dark' : 'light'); toggleColorMode()} }
                 icon={colorMode === 'light' ? <RiMoonFill /> : <RiSunFill />}
               />
               <IconButton aria-label='closemenu' variant="ghost" onClick={onClose}>

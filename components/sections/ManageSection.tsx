@@ -30,6 +30,7 @@ import {
 import { useTranslate } from 'core/lib/hooks/use-translate';
 import Logo from 'components/Layout/Logo';
 import { sleep } from 'core/utils';
+import { ConnectButton } from 'components/venomConnect';
 
 interface Message {
   type: any;
@@ -53,7 +54,6 @@ function ManageSection() {
   if (nftjsons) {
     console.log(nftjsons);
   }
-  
 
   // Main method of this component
   const loadNFTs = async () => {
@@ -62,7 +62,7 @@ function ManageSection() {
       if (!provider?.isInitialized) return;
       setIsLoading(true);
       setListIsEmpty(false);
-      const saltedCode = await saltCode(provider,userAddress);
+      const saltedCode = await saltCode(provider, userAddress);
       // Hash it
       const codeHash = await provider.getBocHash(String(saltedCode));
       if (!codeHash) {
@@ -70,7 +70,7 @@ function ManageSection() {
         return;
       }
       // Fetch all Indexes by hash
-      const indexesAddresses = await getAddressesFromIndex(codeHash,provider);
+      const indexesAddresses = await getAddressesFromIndex(codeHash, provider);
       if (!indexesAddresses || !indexesAddresses.length) {
         if (indexesAddresses && !indexesAddresses.length) setListIsEmpty(true);
         setIsLoading(false);
@@ -142,70 +142,66 @@ function ManageSection() {
             </Alert>
           )}
           <Stack direction={['column']} pb={4} pt={notMobile ? 10 : 6} width="100%" gap={2}>
-            <Text
+            {isConnected && <Text
               width={'100%'}
               textAlign={'center'}
               fontWeight="bold"
               fontSize={notMobile ? '4xl' : '2xl'}
               my={notMobile ? 10 : 4}>
               {t('yourVids')}
-            </Text>
+            </Text>}
             {isLoading && (
               <Center width={'100%'} height={150}>
                 <Spinner size="lg" />
               </Center>
             )}
-            <SimpleGrid columns={[1,1,nftjsons && nftjsons?.length > 1 ? 2 : 1]} gap={4}>
-            {nftjsons?.map((nft) => (
-              <Center
-                width={'100%'}
-                key={nft.name}
-                flexDirection={'column'}
-                gap={2}
-                backgroundColor={colorMode === 'dark' ? 'blackAlpha.300' : 'white'}
-                borderColor={'blackAlpha.200'}
-                borderWidth={1}
-                p={4}
-                borderRadius={12}>
-                <Flex
-                  minW={350}
-                  key={nft.name + ' name'}
-                  color={'var(--venom1)'}
-                  fontWeight={'bold'}
-                  fontSize={'2xl'}
+            <SimpleGrid columns={[1, 1, nftjsons && nftjsons?.length > 1 ? 2 : 1]} gap={4}>
+              {nftjsons?.map((nft) => (
+                <Center
+                  width={'100%'}
+                  key={nft.name}
+                  flexDirection={'column'}
                   gap={2}
-                  justifyContent={'space-between'}
-                  my={2}>
-                  {nft.name}
-                  <Logo />
-                </Flex>
-                <NextLink href={'manage/' + nft.address} passHref>
-                  <Button bgColor={'var(--purple0)'} minW={350}>
-                    Manage {nft.name}
-                  </Button>
-                </NextLink>
-                <Link href={nft.external_url} target="_blank">
-                  <Button minW={350} gap={2}>
-                    {nft.external_url?.slice(8)}
-                  </Button>
-                </Link>
-              </Center>
-            ))}
+                  backgroundColor={colorMode === 'dark' ? 'blackAlpha.300' : 'white'}
+                  borderColor={'blackAlpha.200'}
+                  borderWidth={1}
+                  p={4}
+                  borderRadius={12}>
+                  <Flex
+                    minW={350}
+                    key={nft.name + ' name'}
+                    color={'var(--venom1)'}
+                    fontWeight={'bold'}
+                    fontSize={'2xl'}
+                    gap={2}
+                    justifyContent={'space-between'}
+                    my={2}>
+                    {nft.name}
+                    <Logo />
+                  </Flex>
+                  <NextLink href={'manage/' + nft.address} passHref>
+                    <Button bgColor={'var(--purple0)'} minW={350}>
+                      Manage {nft.name}
+                    </Button>
+                  </NextLink>
+                  <Link href={nft.external_url} target="_blank">
+                    <Button minW={350} gap={2}>
+                      {nft.external_url?.slice(8)}
+                    </Button>
+                  </Link>
+                </Center>
+              ))}
             </SimpleGrid>
           </Stack>
           {!userAddress && (
-            <Text
-              bgColor={'blackAlpha.300'}
-              p={4}
-              borderRadius={12}
-              fontWeight="light"
-              fontSize={'xl'}>
-              {t('venomWalletConnect')}
-            </Text>
+            <Center my={8} flexDirection="column" minH={'75vh'}>
+              <Text my={4}>{t('venomWalletConnect')}</Text>
+              <ConnectButton />
+            </Center>
           )}
-          <Text fontWeight="light" fontSize={notMobile ? '2xl' : 'xl'} my={notMobile ? 10 : 6}>
+          {isConnected && <Text fontWeight="light" fontSize={notMobile ? '2xl' : 'xl'} my={notMobile ? 10 : 6}>
             {t('manageDescription')}
-          </Text>
+          </Text>}
         </>
       </Container>
     </Box>

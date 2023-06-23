@@ -18,19 +18,26 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import { localeAtom } from 'core/atoms';
+import { colorModeAtom, localeAtom } from 'core/atoms';
 import { ConnectButton } from 'components/venomConnect';
-import { useAtom } from 'jotai';
+import { useAtom, useAtomValue } from 'jotai';
 import Logo from './Logo';
 import { RiMoonFill, RiSunFill, RiMenu2Fill, RiCloseFill } from 'react-icons/ri';
 import { Locale } from 'translations';
+import { useEffect } from 'react';
 
 export default function Header() {
   const { colorMode, toggleColorMode } = useColorMode();
+  const [colorM,setColorM] = useAtom(colorModeAtom)
   const [locale, setLocale] = useAtom(localeAtom);
   const [notMobile] = useMediaQuery('(min-width: 800px)');
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  useEffect(()=> {
+    if(colorMode !== colorM){
+      toggleColorMode();
+    }
+  },[])
   return (
     <Box
       as="nav"
@@ -47,7 +54,7 @@ export default function Header() {
               </IconButton>
             )}
             <NextLink href="/" passHref>
-              <Button id="venomidmanagelogo" color="var(--venom1)" fontWeight="bold" variant="ghost" gap={1} px={2}>
+              <Button id="venomidmanagelogo" color="var(--venom1)" fontWeight="bold" variant="ghost" gap={2} px={2}>
                 <Logo />
                 <Text>{notMobile ? 'VenomID' : 'VID'}.Tools</Text>
               </Button>
@@ -86,7 +93,7 @@ export default function Header() {
             {notMobile && (
               <IconButton
                 aria-label="theme"
-                onClick={toggleColorMode}
+                onClick={()=> {setColorM(colorMode === 'light' ? 'dark' : 'light'); toggleColorMode()} }
                 icon={colorMode === 'light' ? <RiMoonFill /> : <RiSunFill />}
               />
             )}

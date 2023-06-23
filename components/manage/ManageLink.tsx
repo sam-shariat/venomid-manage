@@ -69,7 +69,6 @@ export default function ManageLink({ title, icon, url, setUrl, verify }: Props) 
                 </Badge>
               )}
             </Button>
-            
           </Stack>
         </AccordionPanel>
       </AccordionItem>

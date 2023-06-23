@@ -29,7 +29,7 @@ const ThemeProvider = ({ children }: IThemeProvider) => {
   const theme = extendTheme({ config, styles, direction });
 
   return (
-    <ChakraProvider resetCSS theme={theme}>
+    <ChakraProvider theme={theme}>
       {children}
     </ChakraProvider>
   );

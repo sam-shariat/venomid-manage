@@ -3,3 +3,11 @@ export interface State<T> {
   data?: T
   error?: string
 }
+
+
+export interface Message {
+  type: any;
+  title: string;
+  msg: string;
+  link?: string;
+}

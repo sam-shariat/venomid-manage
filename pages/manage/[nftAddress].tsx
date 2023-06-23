@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
-import { Address, ProviderRpcClient } from 'everscale-inpage-provider';
+import { Address, Transaction } from 'everscale-inpage-provider';
 import {
   useMediaQuery,
   useColorMode,
@@ -49,10 +49,14 @@ import {
   venomSProviderAtom,
   venomContractAtom,
   isConnectedAtom,
+  venomContractAddressAtom,
 } from 'core/atoms';
 import { SITE_DESCRIPTION, SITE_TITLE, VENOMSCAN_NFT } from 'core/utils/constants';
 import { ConnectButton } from 'components/venomConnect';
 import { getNft } from 'core/utils/nft';
+import NFTAbi from 'abi/Collection.abi.json';
+import { Message } from 'types';
+import MessageAlert from 'components/Layout/Message';
 
 const ManagePage: NextPage = () => {
   const { t } = useTranslate();
@@ -84,7 +88,12 @@ const ManagePage: NextPage = () => {
   const [avatarUploading, setAvatarUploading] = useState(false);
   const [jsonUploading, setJsonUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
-  const router = useRouter()
+  const [isSaving, setIsSaving] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
+  const [message, setMessage] = useState<Message>({ type: '', title: '', msg: '', link: '' });
+  const VenomContractAddress = useAtomValue(venomContractAddressAtom);
+  const minFee = 660000000;
+  const router = useRouter();
   const nftAddress = String(router.query.nftAddress) ;
 
   function buildFileSelector() {
@@ -131,6 +140,99 @@ const ManagePage: NextPage = () => {
       return;
     }
   };
+
+  async function saveVid(e: string) {
+    if (!isConnected) {
+      setMessage({
+        type: 'info',
+        title: 'connect wallet',
+        msg: 'please connect your venom wallet',
+      });
+      return;
+    }
+    if(!provider?.isInitialized){
+      setMessage({
+        type: 'info',
+        title: 'Provider Not Ready',
+        msg: 'Please wait a few seconds and try again, Your Wallet Provider is not ready, yet',
+      });
+      return;
+    }
+    setMessage({ type: '', title: '', msg: '' });
+    console.log('before saving');
+    const nftContract = new provider.Contract(NFTAbi, new Address(nftAddress));
+    if (nftContract?.methods) {
+      console.log('saving');
+      setIsSaving(true);
+      // @ts-ignore: Unreachable code error
+      const saveTx = await nftContract?.methods.setData({ data: jsonHash })
+        .send({
+          amount: String(minFee),
+          bounce: true,
+          from: new Address(userAddress),
+        })
+        .catch((e: any) => {
+          if (e.code === 3) {
+            // rejected by a user
+            setIsSaving(false);
+            return Promise.resolve(null);
+          } else {
+            setIsSaving(false);
+            console.log(e);
+            return Promise.reject(e);
+          }
+        });
+
+      if (saveTx) {
+        console.log('save tx : ', saveTx);
+        setIsConfirming(true)
+        let receiptTx: Transaction | undefined;
+        const subscriber = provider && new provider.Subscriber();
+        if (subscriber)
+          await subscriber
+            .trace(saveTx)
+            .tap((tx_in_tree: any) => {
+              console.log('tx_in_tree : ', tx_in_tree);
+              if (tx_in_tree.account.equals(nftAddress)) {
+                receiptTx = tx_in_tree;
+              }
+            })
+            .finished();
+
+        
+        let events = await venomContract.decodeTransactionEvents({
+          transaction: receiptTx as Transaction,
+        });
+        console.log(events);
+        // if (events.length !== 1 || events[0].event !== 'NftCreated') {
+        //   setMessage({
+        //     type: 'error',
+        //     title: 'Error',
+        //     msg: 'Something went wrong, Please try again',
+        //   });
+        // } else {
+        //   // @ts-ignore: Unreachable code error
+        //   const nftAddress = String(events[0].data?.nft && events[0].data?.nft?._address);
+        //   setMessage({
+        //     type: 'success',
+        //     title: 'Mint Successful',
+        //     msg: 'Venom ID Claimed Successfuly, You can now manage and share your venom profile',
+        //     link: VENOMSCAN_NFT + nftAddress,
+        //   });
+        // }
+        setIsSaving(false);
+        setIsConfirming(false);
+        console.log(events);
+      }
+      console.log('save finished');
+    }
+  }
+
+  useEffect(() => {
+    if (provider?.isInitialized && venomContract !== undefined && isConnected) {
+      console.log("venom contract ",venomContract)
+    }
+  }, [provider]);
 
   const sendproFileToIPFS = async (e: any) => {
     if (e) {
@@ -331,12 +433,14 @@ const ManagePage: NextPage = () => {
               onChange={(e) => setBio(e.currentTarget.value)}
             />}
             {!isLoading && <ManageSocials json={json} nftAddress={nftAddress}/>}
+            <MessageAlert message={message} notMobile={notMobile} />
             <Button
               mt={10}
               width={notMobile ? 'md' : 'xs'}
               size="lg"
               isLoading={jsonUploading}
               disabled={isLoading}
+              loadingText={isSaving ? 'Saving To VID NFT' : isConfirming ? 'Confirming...' : ''}
               backgroundColor="var(--venom1)"
               onClick={uploadJson}>
               Save Profile

@@ -64,7 +64,6 @@ export default function ManageSocials({ json, nftAddress }: Props) {
 
   function verifyTwitter(){
     console.log('verifying twitter');
-    window.open(`/api/auth/signin`,'_blank');
     signIn()
   }
 
@@ -88,16 +87,10 @@ export default function ManageSocials({ json, nftAddress }: Props) {
         icon={json.lineIcons ? <RiTwitterLine size="28" /> : <RiTwitterFill size="28" />}
         title="Twitter"
         url={twitter}
-        verify={verifyTwitter}
+        
         setUrl={setTwitter}
       />
-      <a
-                href={`/api/auth/signin`}
-                onClick={(e) => {
-                  e.preventDefault()
-                  signIn()
-                }}
-              >sign in</a>
+      
       <ManageLink
         icon={json.lineIcons ? <RiDiscordLine size="28" /> : <RiDiscordFill size="28" />}
         title="Discord"

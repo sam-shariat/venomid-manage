@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Address, ProviderRpcClient } from 'everscale-inpage-provider';
 import { CONTRACT_ADDRESS, SITE_URL } from 'core/utils/constants';
 // Our implemented util
-import { BaseNftJson, getNftsByIndexes } from 'core/utils/nft';
+import { BaseNftJson, getAddressesFromIndex, getNftsByIndexes, saltCode } from 'core/utils/nft';
 import { venomContractAtom, venomSProviderAtom, addressAtom, isConnectedAtom } from 'core/atoms';
 import { useAtom, useAtomValue } from 'jotai';
 import NextLink from 'next/link';
@@ -54,41 +53,7 @@ function ManageSection() {
   if (nftjsons) {
     console.log(nftjsons);
   }
-  // Method to returning a salted index code (base64)
-  const saltCode = async () => {
-    if (!provider) return;
-    // Index StateInit you should take from github. It ALWAYS constant!
-    const INDEX_BASE_64 =
-      'te6ccgECIAEAA4IAAgE0AwEBAcACAEPQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgAgaK2zUfBAQkiu1TIOMDIMD/4wIgwP7jAvILHAYFHgOK7UTQ10nDAfhmifhpIds80wABn4ECANcYIPkBWPhC+RDyqN7TPwH4QyG58rQg+COBA+iogggbd0CgufK0+GPTHwHbPPI8EQ4HA3rtRNDXScMB+GYi0NMD+kAw+GmpOAD4RH9vcYIImJaAb3Jtb3Nwb3T4ZNwhxwDjAiHXDR/yvCHjAwHbPPI8GxsHAzogggujrde64wIgghAWX5bBuuMCIIIQR1ZU3LrjAhYSCARCMPhCbuMA+EbycyGT1NHQ3vpA0fhBiMjPjits1szOyds8Dh8LCQJqiCFus/LoZiBu8n/Q1PpA+kAwbBL4SfhKxwXy4GT4ACH4a/hs+kJvE9cL/5Mg+GvfMNs88gAKFwA8U2FsdCBkb2Vzbid0IGNvbnRhaW4gYW55IHZhbHVlAhjQIIs4rbNYxwWKiuIMDQEK103Q2zwNAELXTNCLL0pA1yb0BDHTCTGLL0oY1yYg10rCAZLXTZIwbeICFu1E0NdJwgGOgOMNDxoCSnDtRND0BXEhgED0Do6A34kg+Gz4a/hqgED0DvK91wv/+GJw+GMQEQECiREAQ4AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAD/jD4RvLgTPhCbuMA0x/4RFhvdfhk0ds8I44mJdDTAfpAMDHIz4cgznHPC2FeIMjPkll+WwbOWcjOAcjOzc3NyXCOOvhEIG8TIW8S+ElVAm8RyM+EgMoAz4RAzgH6AvQAcc8LaV4gyPhEbxXPCx/OWcjOAcjOzc3NyfhEbxTi+wAaFRMBCOMA8gAUACjtRNDT/9M/MfhDWMjL/8s/zsntVAAi+ERwb3KAQG90+GT4S/hM+EoDNjD4RvLgTPhCbuMAIZPU0dDe+kDR2zww2zzyABoYFwA6+Ez4S/hK+EP4QsjL/8s/z4POWcjOAcjOzc3J7VQBMoj4SfhKxwXy6GXIz4UIzoBvz0DJgQCg+wAZACZNZXRob2QgZm9yIE5GVCBvbmx5AELtRNDT/9M/0wAx+kDU0dD6QNTR0PpA0fhs+Gv4avhj+GIACvhG8uBMAgr0pCD0oR4dABRzb2wgMC41OC4yAAAADCD4Ye0e2Q==';
-    // Gettind a code from Index StateInit
-    const tvc = await provider.splitTvc(INDEX_BASE_64);
-    if (!tvc.code) throw new Error('tvc code is empty');
-    // Salt structure that we already know
-    const saltStruct = [
-      { name: 'collection', type: 'address' },
-      { name: 'owner', type: 'address' },
-      { name: 'type', type: 'fixedbytes3' }, // according on standards, each index salted with string 'nft'
-    ] as const;
-    const { code: saltedCode } = await provider.setCodeSalt({
-      code: tvc.code,
-      salt: {
-        structure: saltStruct,
-        abiVersion: '2.1',
-        data: {
-          collection: new Address(CONTRACT_ADDRESS),
-          owner: new Address(userAddress),
-          type: btoa('nft'),
-        },
-      },
-    });
-    return saltedCode;
-  };
-
-  // Method, that return Index'es addresses by single query with fetched code hash
-  const getAddressesFromIndex = async (codeHash: string): Promise<Address[] | undefined> => {
-    const addresses = await provider?.getAccountsByCodeHash({ codeHash });
-    return addresses?.accounts;
-  };
+  
 
   // Main method of this component
   const loadNFTs = async () => {
@@ -97,7 +62,7 @@ function ManageSection() {
       if (!provider?.isInitialized) return;
       setIsLoading(true);
       setListIsEmpty(false);
-      const saltedCode = await saltCode();
+      const saltedCode = await saltCode(provider,userAddress);
       // Hash it
       const codeHash = await provider.getBocHash(String(saltedCode));
       if (!codeHash) {
@@ -105,13 +70,13 @@ function ManageSection() {
         return;
       }
       // Fetch all Indexes by hash
-      const indexesAddresses = await getAddressesFromIndex(codeHash);
+      const indexesAddresses = await getAddressesFromIndex(codeHash,provider);
       if (!indexesAddresses || !indexesAddresses.length) {
         if (indexesAddresses && !indexesAddresses.length) setListIsEmpty(true);
         setIsLoading(false);
         return;
       }
-      // Fetch all image URLs
+      // Fetch all nfts
       const _nftJsons = await getNftsByIndexes(provider, indexesAddresses);
       setNftJsons(_nftJsons);
       setIsLoading(false);
@@ -140,7 +105,7 @@ function ManageSection() {
     <Box>
       <Container
         as="main"
-        maxW="container.md"
+        maxW="container.lg"
         display="grid"
         placeContent="center"
         placeItems="center"
@@ -190,6 +155,7 @@ function ManageSection() {
                 <Spinner size="lg" />
               </Center>
             )}
+            <SimpleGrid columns={[1,1,nftjsons && nftjsons?.length > 1 ? 2 : 1]} gap={4}>
             {nftjsons?.map((nft) => (
               <Center
                 width={'100%'}
@@ -199,8 +165,7 @@ function ManageSection() {
                 backgroundColor={colorMode === 'dark' ? 'blackAlpha.300' : 'white'}
                 borderColor={'blackAlpha.200'}
                 borderWidth={1}
-                p={3}
-                py={4}
+                p={4}
                 borderRadius={12}>
                 <Flex
                   minW={350}
@@ -226,6 +191,7 @@ function ManageSection() {
                 </Link>
               </Center>
             ))}
+            </SimpleGrid>
           </Stack>
           {!userAddress && (
             <Text

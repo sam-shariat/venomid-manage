@@ -9,8 +9,8 @@ export const authOptions: NextAuthOptions = {
   // https://next-auth.js.org/configuration/providers/oauth
   providers: [
     GithubProvider({
-      clientId: String(process.env.GITHUB_ID),
-      clientSecret: String(process.env.GITHUB_SECRET),
+      clientId: process.env.GITHUB_ID ? String(process.env.GITHUB_ID) : 'github_client_id',
+      clientSecret: process.env.GITHUB_SECRET ? String(process.env.GITHUB_SECRET) : 'github_client_secret',
     }),
     // GoogleProvider({
     //   clientId: process.env.GOOGLE_ID,

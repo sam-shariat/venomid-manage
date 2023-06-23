@@ -87,7 +87,7 @@ export default function ManageSocials({ json, nftAddress }: Props) {
         icon={json.lineIcons ? <RiTwitterLine size="28" /> : <RiTwitterFill size="28" />}
         title="Twitter"
         url={twitter}
-        verify={verifyTwitter}
+        
         setUrl={setTwitter}
       />
       

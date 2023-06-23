@@ -30,6 +30,7 @@ const balanceAtom = atom('0');
 const venomContractAddressAtom = atom(CONTRACT_ADDRESS)
 const venomSProviderAtom = atom<ProviderRpcClient | undefined>(undefined);
 const venomContractAtom = atom<any>(undefined);
+const nftContractAtom = atom<any>(undefined);
 const isConnectedAtom = atom(false);
 const hydratedAtom = atom<boolean>(false);
 const authAtom = atomWithStorage('user', initialAuthState);
@@ -38,6 +39,7 @@ const colorModeAtom = atomWithStorage<string>('colorM','dark');
 export {
   isConnectedAtom,
   colorModeAtom,
+  nftContractAtom,
   walletAtom,
   jsonAtom,
   jsonHashAtom,

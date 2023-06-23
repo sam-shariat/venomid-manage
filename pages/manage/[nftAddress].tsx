@@ -50,11 +50,12 @@ import {
   venomContractAtom,
   isConnectedAtom,
   venomContractAddressAtom,
+  nftContractAtom,
 } from 'core/atoms';
 import { SITE_DESCRIPTION, SITE_TITLE, VENOMSCAN_NFT } from 'core/utils/constants';
 import { ConnectButton } from 'components/venomConnect';
 import { getNft } from 'core/utils/nft';
-import NFTAbi from 'abi/Collection.abi.json';
+import NFTAbi from 'abi/Nft.abi.json';
 import { Message } from 'types';
 import MessageAlert from 'components/Layout/Message';
 
@@ -94,7 +95,8 @@ const ManagePage: NextPage = () => {
   const VenomContractAddress = useAtomValue(venomContractAddressAtom);
   const minFee = 660000000;
   const router = useRouter();
-  const nftAddress = String(router.query.nftAddress) ;
+  const nftAddress = String(router.query.nftAddress);
+  const [nftContract, setNftContract] = useAtom(nftContractAtom);
 
   function buildFileSelector() {
     if (process.browser) {
@@ -132,6 +134,7 @@ const ManagePage: NextPage = () => {
       setJsonHash('https://ipfs.io/ipfs/' + resFile.data.IpfsHash);
       setJsonUploading(false);
       console.log('https://ipfs.io/ipfs/' + resFile.data.IpfsHash);
+      saveVid(resFile.data.IpfsHash);
       //Take a look at your Pinata Pinned section, you will see a new file added to you list.
     } catch (error) {
       setJsonUploading(false);
@@ -141,7 +144,7 @@ const ManagePage: NextPage = () => {
     }
   };
 
-  async function saveVid(e: string) {
+  async function saveVid(_jsonHash: string) {
     if (!isConnected) {
       setMessage({
         type: 'info',
@@ -150,7 +153,7 @@ const ManagePage: NextPage = () => {
       });
       return;
     }
-    if(!provider?.isInitialized){
+    if (!provider) {
       setMessage({
         type: 'info',
         title: 'Provider Not Ready',
@@ -160,12 +163,11 @@ const ManagePage: NextPage = () => {
     }
     setMessage({ type: '', title: '', msg: '' });
     console.log('before saving');
-    const nftContract = new provider.Contract(NFTAbi, new Address(nftAddress));
     if (nftContract?.methods) {
       console.log('saving');
       setIsSaving(true);
-      // @ts-ignore: Unreachable code error
-      const saveTx = await nftContract?.methods.setData({ data: jsonHash })
+      
+      const saveTx = await nftContract.methods.setData({ data: _jsonHash })
         .send({
           amount: String(minFee),
           bounce: true,
@@ -185,7 +187,7 @@ const ManagePage: NextPage = () => {
 
       if (saveTx) {
         console.log('save tx : ', saveTx);
-        setIsConfirming(true)
+        setIsConfirming(true);
         let receiptTx: Transaction | undefined;
         const subscriber = provider && new provider.Subscriber();
         if (subscriber)
@@ -199,7 +201,6 @@ const ManagePage: NextPage = () => {
             })
             .finished();
 
-        
         let events = await venomContract.decodeTransactionEvents({
           transaction: receiptTx as Transaction,
         });
@@ -229,10 +230,21 @@ const ManagePage: NextPage = () => {
   }
 
   useEffect(() => {
-    if (provider?.isInitialized && venomContract !== undefined && isConnected) {
-      console.log("venom contract ",venomContract)
+    async function init() {
+      if (provider?.isInitialized === false) {
+        console.log('provider not ready');
+        await sleep(3000);
+        init();
+        return;
+      }
+      if (provider && provider?.isInitialized && isConnected && nftAddress) {
+        const _nftContract = new provider.Contract(NFTAbi, new Address(nftAddress));
+        console.log("_nftContract ",_nftContract)
+        setNftContract(_nftContract);
+      }
     }
-  }, [provider]);
+    init();
+  }, [provider?.isInitialized,isConnected,nftAddress]);
 
   const sendproFileToIPFS = async (e: any) => {
     if (e) {
@@ -293,25 +305,23 @@ const ManagePage: NextPage = () => {
       if (userAddress && isConnected && provider) {
         try {
           if (provider?.isInitialized === false) {
-            console.log('provider not ready')
+            console.log('provider not ready');
             await sleep(1000);
             getProfileJson();
-            return
+            return;
           }
-          console.log('getting nft : ',nftAddress)
+          console.log('getting nft : ', nftAddress);
           setIsLoading(true);
-          const nftJson = await getNft(provider,new Address(nftAddress));
-          console.log('nftJson : ',nftJson);
+          const nftJson = await getNft(provider, new Address(nftAddress));
+          console.log('nftJson : ', nftJson);
           const ipfsData = nftJson.attributes?.find((att) => att.trait_type === 'DATA')?.value;
-          if(ipfsData === ''){
-            setJson({name: nftJson.name, venomAddress: userAddress, socials: {}});
+          if (ipfsData === '') {
+            setJson({ name: nftJson.name, venomAddress: userAddress, socials: {} });
             setName(String(nftJson.name));
             setIsLoading(false);
             return;
           }
-          const res = await axios.get(
-            'https://ipfs.io/ipfs/'+ ipfsData
-          );
+          const res = await axios.get('https://ipfs.io/ipfs/' + ipfsData);
           setJson(res.data);
           console.log(res.data);
           setName(res.data.name);
@@ -321,15 +331,13 @@ const ManagePage: NextPage = () => {
           setAvatar(res.data.avatar);
           setIsLoading(false);
         } catch (error) {
-          console.log("error fetching nft",error)
+          console.log('error fetching nft', error);
           setIsLoading(false);
         }
       }
     }
     getProfileJson();
-  }, [userAddress,isConnected,provider]);
-
-  
+  }, [userAddress, isConnected, provider]);
 
   return (
     <>
@@ -356,7 +364,12 @@ const ManagePage: NextPage = () => {
           placeItems="center"
           minH="75vh">
           <>
-            <Heading fontWeight="bold" fontSize="2xl" my={4} mt={10} textShadow="0 0 20px #00000070">
+            <Heading
+              fontWeight="bold"
+              fontSize="2xl"
+              my={4}
+              mt={10}
+              textShadow="0 0 20px #00000070">
               {!isLoading ? json.name : 'Loading Venom ID'}
             </Heading>
             {avatar ? <Avatar url={avatar} /> : <Avatar url={'/logos/vidbg.svg'} />}
@@ -418,21 +431,25 @@ const ManagePage: NextPage = () => {
                 <Spinner size="lg" />
               </Center>
             )}
-            {!isLoading && <Text mt={10} fontWeight="bold" fontSize="xl">
-              Bio & Socials
-            </Text>}
-            {!isLoading && <Textarea
-              minWidth="xs"
-              my={4}
-              rows={4}
-              maxLength={500}
-              placeholder={"I'm Sam. Blockchain Developer ..."}
-              size="lg"
-              resize={'none'}
-              value={json ? bio : 'Loading'}
-              onChange={(e) => setBio(e.currentTarget.value)}
-            />}
-            {!isLoading && <ManageSocials json={json} nftAddress={nftAddress}/>}
+            {!isLoading && (
+              <Text mt={10} fontWeight="bold" fontSize="xl">
+                Bio & Socials
+              </Text>
+            )}
+            {!isLoading && (
+              <Textarea
+                minWidth="xs"
+                my={4}
+                rows={4}
+                maxLength={500}
+                placeholder={"I'm Sam. Blockchain Developer ..."}
+                size="lg"
+                resize={'none'}
+                value={json ? bio : 'Loading'}
+                onChange={(e) => setBio(e.currentTarget.value)}
+              />
+            )}
+            {!isLoading && <ManageSocials json={json} nftAddress={nftAddress} />}
             <MessageAlert message={message} notMobile={notMobile} />
             <Button
               mt={10}

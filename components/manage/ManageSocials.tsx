@@ -87,10 +87,8 @@ export default function ManageSocials({ json, nftAddress }: Props) {
         icon={json.lineIcons ? <RiTwitterLine size="28" /> : <RiTwitterFill size="28" />}
         title="Twitter"
         url={twitter}
-        
         setUrl={setTwitter}
       />
-      
       <ManageLink
         icon={json.lineIcons ? <RiDiscordLine size="28" /> : <RiDiscordFill size="28" />}
         title="Discord"

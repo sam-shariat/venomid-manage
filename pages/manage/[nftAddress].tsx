@@ -163,11 +163,11 @@ const ManagePage: NextPage = () => {
     }
     setMessage({ type: '', title: '', msg: '' });
     console.log('before saving');
-    if (nftContract?.methods) {
+    if (nftContract && nftContract?.methods) {
       console.log('saving');
       setIsSaving(true);
-      
-      const saveTx = await nftContract.methods.setData({ data: _jsonHash })
+      const saveTx = await nftContract.methods
+        .setData({ data: String(_jsonHash) })
         .send({
           amount: String(minFee),
           bounce: true,
@@ -228,23 +228,6 @@ const ManagePage: NextPage = () => {
       console.log('save finished');
     }
   }
-
-  useEffect(() => {
-    async function init() {
-      if (provider?.isInitialized === false) {
-        console.log('provider not ready');
-        await sleep(3000);
-        init();
-        return;
-      }
-      if (provider && provider?.isInitialized && isConnected && nftAddress) {
-        const _nftContract = new provider.Contract(NFTAbi, new Address(nftAddress));
-        console.log("_nftContract ",_nftContract)
-        setNftContract(_nftContract);
-      }
-    }
-    init();
-  }, [provider?.isInitialized,isConnected,nftAddress]);
 
   const sendproFileToIPFS = async (e: any) => {
     if (e) {
@@ -312,6 +295,11 @@ const ManagePage: NextPage = () => {
           }
           console.log('getting nft : ', nftAddress);
           setIsLoading(true);
+          if(nftContract === undefined){
+            const _nftContract = new provider.Contract(NFTAbi, new Address(nftAddress));
+            console.log('_nftContract ', _nftContract);
+            setNftContract(_nftContract);
+          }
           const nftJson = await getNft(provider, new Address(nftAddress));
           console.log('nftJson : ', nftJson);
           const ipfsData = nftJson.attributes?.find((att) => att.trait_type === 'DATA')?.value;

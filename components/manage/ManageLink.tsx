@@ -27,6 +27,7 @@ export default function ManageLink({ title, icon, url, setUrl, verify }: Props) 
   const [notMobile] = useMediaQuery('(min-width: 800px)');
 
   return (
+    <>
     <Accordion
       allowToggle
       allowMultiple={false}
@@ -73,5 +74,6 @@ export default function ManageLink({ title, icon, url, setUrl, verify }: Props) 
         </AccordionPanel>
       </AccordionItem>
     </Accordion>
-  );
+    </>
+  )
 }

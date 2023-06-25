@@ -20,7 +20,7 @@
     "@emotion/react": "^11",
     "@emotion/styled": "^11",
     "axios": "^1.4.0",
-    "everscale-standalone-client": "^2.1.19",
+    "everscale-standalone-client": "^2.1.20",
     "framer-motion": "^6",
     "jotai": "^1.6.3",
     "next": "12.1.4",

@@ -8,17 +8,13 @@ import {
   balanceAtom,
   venomProviderAtom,
   venomSProviderAtom,
-  venomContractAtom,
-  venomContractAddressAtom,
   isConnectedAtom,
 } from 'core/atoms';
-import VenomAbi from 'abi/Collection.abi.json';
 import { Address, ProviderRpcClient } from 'everscale-inpage-provider';
 import React, { useEffect } from 'react';
 
 export default function ConnectButton() {
   const [notMobile] = useMediaQuery('(min-width: 800px)');
-  const VenomContractAddress = useAtomValue(venomContractAddressAtom);
   const venomConnect = useAtomValue(walletAtom);
   const [isConnected, setIsConnected] = useAtom(isConnectedAtom);
 
@@ -31,7 +27,6 @@ export default function ConnectButton() {
 
   const [venomProvider, setVenomProvider] = useAtom(venomProviderAtom);
   const [venomSProvider, setVenomSProvider] = useAtom(venomSProviderAtom);
-  const [venomContract, setVenomContract] = useAtom(venomContractAtom);
   const [address, setAddress] = useAtom(addressAtom);
   const [balance, setBalance] = useAtom(balanceAtom);
 
@@ -89,9 +84,7 @@ export default function ConnectButton() {
       const venomWalletAddress = provider ? await getAddress(provider) : undefined;
       setAddress(venomWalletAddress);
       console.log('address set');
-      const _venomContract = new provider.Contract(VenomAbi, new Address(VenomContractAddress));
-      setVenomContract(_venomContract);
-      console.log("venomid contract set",_venomContract)
+      
     } catch (e) {
       console.log(e);
     }

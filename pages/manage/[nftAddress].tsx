@@ -48,9 +48,7 @@ import {
   jsonAtom,
   addressAtom,
   venomSProviderAtom,
-  venomContractAtom,
   isConnectedAtom,
-  venomContractAddressAtom,
   nftContractAtom,
 } from 'core/atoms';
 import { SITE_DESCRIPTION, SITE_TITLE, VENOMSCAN_NFT } from 'core/utils/constants';
@@ -69,7 +67,6 @@ const ManagePage: NextPage = () => {
   const twitter = useAtomValue(twitterAtom);
   const discord = useAtomValue(discordAtom);
   const provider = useAtomValue(venomSProviderAtom);
-  const venomContract = useAtomValue(venomContractAtom);
   const isConnected = useAtomValue(isConnectedAtom);
   const userAddress = useAtomValue(addressAtom);
   const medium = useAtomValue(mediumAtom);
@@ -93,7 +90,6 @@ const ManagePage: NextPage = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
   const [message, setMessage] = useState<Message>({ type: '', title: '', msg: '', link: '' });
-  const VenomContractAddress = useAtomValue(venomContractAddressAtom);
   const minFee = 660000000;
   const router = useRouter();
   const nftAddress = String(router.query.nftAddress);
@@ -165,12 +161,11 @@ const ManagePage: NextPage = () => {
     setMessage({ type: '', title: '', msg: '' });
     console.log('before saving');
     if (provider.isInitialized) {
-      console.log('saving');
+      console.log('saving ', provider);
       setIsSaving(true);
-      const _nftContract = new provider.Contract(NFTAbi, new Address(String(nftAddress)));
-      console.log('data : ',minFee,userAddress,_nftContract);
+      console.log('data : ',minFee,userAddress,_jsonHash,nftContract);
       // @ts-ignore: Unreachable code error
-      const saveTx = await _nftContract.methods
+      const saveTx = await nftContract.methods
         .setData({ data: String(_jsonHash) })
         .send({
           amount: String(minFee),
@@ -205,7 +200,7 @@ const ManagePage: NextPage = () => {
             })
             .finished();
 
-        let events = await venomContract.decodeTransactionEvents({
+        let events = await nftContract.decodeTransactionEvents({
           transaction: receiptTx as Transaction,
         });
         console.log(events);
@@ -299,11 +294,11 @@ const ManagePage: NextPage = () => {
           }
           console.log('getting nft : ', nftAddress);
           setIsLoading(true);
-          // if(nftContract === undefined){
-          //   const _nftContract = new provider.Contract(NFTAbi, new Address(nftAddress));
-          //   console.log('_nftContract ', _nftContract);
-          //   setNftContract(_nftContract);
-          // }
+          if(nftContract === undefined){
+            const _nftContract = new provider.Contract(NFTAbi, new Address(nftAddress));
+            console.log('_nftContract ', _nftContract);
+            setNftContract(_nftContract);
+          }
           const nftJson = await getNft(provider, new Address(nftAddress));
           console.log('nftJson : ', nftJson);
           const ipfsData = nftJson.attributes?.find((att) => att.trait_type === 'DATA')?.value;

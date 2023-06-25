@@ -2328,17 +2328,17 @@ everscale-inpage-provider@^0.3.59:
   resolved "https://registry.yarnpkg.com/everscale-inpage-provider/-/everscale-inpage-provider-0.3.61.tgz#deefa71c62e61ab074365e75068fe298ac0378e9"
   integrity sha512-PsAuVLToMDTBaO2gBqc7Yi7EDMjU01v3mf2qPeBuJmyNEX6tNhOEueQSmK3Xhy/QszaGWsU2GrqAfvMDB1od7Q==
 
-everscale-standalone-client@^2.1.19:
-  version "2.1.19"
-  resolved "https://registry.yarnpkg.com/everscale-standalone-client/-/everscale-standalone-client-2.1.19.tgz#52b83b14583bd5747b691ca65569cde44cf3eabe"
-  integrity sha512-QI9i55NPGZ2BGzDJXvdnCL1l6lKz3/Ov64lpnlfLOSFQTmsXBrwIMZfAtEbaYcUV5v/Ruh0zH/OzNHZpuxPAiA==
+everscale-standalone-client@^2.1.20:
+  version "2.1.20"
+  resolved "https://registry.yarnpkg.com/everscale-standalone-client/-/everscale-standalone-client-2.1.20.tgz#8a276613cef5bc5a3f7d81bbecee6f1b4b6e2cda"
+  integrity sha512-74OSo6GZr6Sj5bZTuDA1F3fBqFG776SxZn52vZYWoRteRsWFl0Ar8ywEZdbUtNBhx+gD9FSBSFONGLvdMVKU+Q==
   dependencies:
     "@broxus/await-semaphore" "^0.1.5"
     bignumber.js "^9.1.0"
     events "^3.3.0"
     everscale-inpage-provider "^0.3.59"
     fast-safe-stringify "^2.1.1"
-    nekoton-wasm "^1.1.6"
+    nekoton-wasm "^1.1.8"
     node-fetch "^2.6.7"
 
 execa@^7.0.0:
@@ -3139,10 +3139,10 @@ natural-compare@^1.4.0:
   resolved "https://registry.npmjs.org/natural-compare/-/natural-compare-1.4.0.tgz"
   integrity sha1-Sr6/7tdUHywnrPspvbvRXI1bpPc=
 
-nekoton-wasm@^1.1.6:
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/nekoton-wasm/-/nekoton-wasm-1.1.7.tgz#f8d1e98aef0f515515caf8a1d136e3a79896e0d2"
-  integrity sha512-9xoKoTzqKGowauP06Lph2GPO7WnPrNIhPWRpu29FDRp/wm+3psEW5tAQJNCdjAcF6KBVaZwK91iGxV7d84FrlA==
+nekoton-wasm@^1.1.8:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/nekoton-wasm/-/nekoton-wasm-1.1.8.tgz#0be836bddffc55b15ff6ffe997beb2059086cba2"
+  integrity sha512-wFuxsPAB4Tj31glTKQKcgWmgCvS7R+FhjIlRkR4DU64GnlAsoJW1F/YMhBZiO7P22Q7ymETi0jUMLgwqP5NVhA==
 
 neo-async@^2.6.2:
   version "2.6.2"

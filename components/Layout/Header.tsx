@@ -34,10 +34,13 @@ export default function Header() {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   useEffect(()=> {
+    console.log(colorMode + " is " + colorM)
     if(colorMode !== colorM){
+      
       toggleColorMode();
     }
   },[colorMode])
+  
   return (
     <Box
       as="nav"

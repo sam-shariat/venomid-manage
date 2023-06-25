@@ -25,6 +25,7 @@ import { Avatar } from 'components/Profile';
 import { sleep, truncAddress } from 'core/utils';
 import axios from 'axios';
 import ManageSocials from 'components/manage/ManageSocials';
+import ManageSettings from 'components/manage/ManageSettings';
 import { useAtom, useAtomValue } from 'jotai';
 import {
   bioAtom,
@@ -163,10 +164,13 @@ const ManagePage: NextPage = () => {
     }
     setMessage({ type: '', title: '', msg: '' });
     console.log('before saving');
-    if (nftContract && nftContract?.methods) {
+    if (provider.isInitialized) {
       console.log('saving');
       setIsSaving(true);
-      const saveTx = await nftContract.methods
+      const _nftContract = new provider.Contract(NFTAbi, new Address(String(nftAddress)));
+      console.log('data : ',minFee,userAddress,_nftContract);
+      // @ts-ignore: Unreachable code error
+      const saveTx = await _nftContract.methods
         .setData({ data: String(_jsonHash) })
         .send({
           amount: String(minFee),
@@ -295,11 +299,11 @@ const ManagePage: NextPage = () => {
           }
           console.log('getting nft : ', nftAddress);
           setIsLoading(true);
-          if(nftContract === undefined){
-            const _nftContract = new provider.Contract(NFTAbi, new Address(nftAddress));
-            console.log('_nftContract ', _nftContract);
-            setNftContract(_nftContract);
-          }
+          // if(nftContract === undefined){
+          //   const _nftContract = new provider.Contract(NFTAbi, new Address(nftAddress));
+          //   console.log('_nftContract ', _nftContract);
+          //   setNftContract(_nftContract);
+          // }
           const nftJson = await getNft(provider, new Address(nftAddress));
           console.log('nftJson : ', nftJson);
           const ipfsData = nftJson.attributes?.find((att) => att.trait_type === 'DATA')?.value;
@@ -364,6 +368,7 @@ const ManagePage: NextPage = () => {
             <Button
               isLoading={avatarUploading || isLoading}
               mb={4}
+              color="white"
               backgroundColor="var(--venom1)"
               onClick={() => imageFileSelect !== undefined && imageFileSelect.click()}>
               Select Avatar Image
@@ -386,7 +391,7 @@ const ManagePage: NextPage = () => {
                     </Text>
                   </Button>
                 </Link>
-                <InputGroup size="lg" minWidth="xs">
+                <InputGroup size="lg" minWidth="xs" borderColor="gray">
                   <InputLeftAddon>
                     <Flex>
                       {notMobile && <BTC />}
@@ -399,14 +404,13 @@ const ManagePage: NextPage = () => {
                     onChange={(e) => setBtc(e.currentTarget.value)}
                   />
                 </InputGroup>
-                <InputGroup size="lg" minWidth="xs">
+                <InputGroup size="lg" minWidth="xs" borderColor="gray">
                   <InputLeftAddon>
                     <Flex>
                       {notMobile && <ETH />}
                       ETH {notMobile && 'Address'}
                     </Flex>
                   </InputLeftAddon>
-
                   <Input
                     placeholder={'Enter Your ETH Address'}
                     value={json ? eth : 'Loading'}
@@ -432,17 +436,21 @@ const ManagePage: NextPage = () => {
                 maxLength={500}
                 placeholder={"I'm Sam. Blockchain Developer ..."}
                 size="lg"
+                borderWidth={1}
+                borderColor="gray"
                 resize={'none'}
                 value={json ? bio : 'Loading'}
                 onChange={(e) => setBio(e.currentTarget.value)}
               />
             )}
             {!isLoading && <ManageSocials json={json} nftAddress={nftAddress} />}
+            {!isLoading && <ManageSettings json={json} nftAddress={nftAddress} />}
             <MessageAlert message={message} notMobile={notMobile} />
             <Button
               mt={10}
               width={notMobile ? 'md' : 'xs'}
               size="lg"
+              color="white"
               isLoading={jsonUploading}
               disabled={isLoading}
               loadingText={isSaving ? 'Saving To VID NFT' : isConfirming ? 'Confirming...' : ''}

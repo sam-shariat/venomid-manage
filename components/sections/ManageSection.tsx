@@ -133,7 +133,7 @@ function ManageSection() {
                     </Button>
                   </Link>
                   <Link href={SITE_URL} target="_blank" id={`venom-id-manage-nft-link`}>
-                    <Button m={1} minWidth={120} bgColor={'var(--purple0)'}>
+                    <Button m={1} color='white' minWidth={120} bgColor={'var(--purple1)'}>
                       Manage VID
                     </Button>
                   </Link>
@@ -162,7 +162,7 @@ function ManageSection() {
                   key={nft.name}
                   flexDirection={'column'}
                   gap={2}
-                  backgroundColor={colorMode === 'dark' ? 'blackAlpha.300' : 'white'}
+                  background={colorMode === 'dark' ? 'blackAlpha.300' : 'white'}
                   borderColor={'blackAlpha.200'}
                   borderWidth={1}
                   p={4}
@@ -180,7 +180,7 @@ function ManageSection() {
                     <Logo />
                   </Flex>
                   <NextLink href={'manage/' + nft.address} passHref>
-                    <Button bgColor={'var(--purple0)'} minW={350}>
+                    <Button color='white' bgColor={'var(--purple2)'} minW={350}>
                       Manage {nft.name}
                     </Button>
                   </NextLink>

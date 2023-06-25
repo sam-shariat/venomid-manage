@@ -82,10 +82,10 @@ export default function ConnectButton() {
     try {
       console.log('provider ', provider);
       if(!provider) return
-      setVenomProvider(provider);
-      console.log('provider set');
       setIsConnected(true);
       console.log('connected');
+      setVenomProvider(provider);
+      console.log('provider set');
       const venomWalletAddress = provider ? await getAddress(provider) : undefined;
       setAddress(venomWalletAddress);
       console.log('address set');

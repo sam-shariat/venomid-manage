@@ -33,12 +33,16 @@ const venomContractAtom = atom<any>(undefined);
 const nftContractAtom = atom<any>(undefined);
 const isConnectedAtom = atom(false);
 const hydratedAtom = atom<boolean>(false);
+const useLineIconsAtom = atom<boolean>(false);
+const lightModeAtom = atom<boolean>(false);
 const authAtom = atomWithStorage('user', initialAuthState);
 const localeAtom = atomWithStorage<string>('locale', 'en');
 const colorModeAtom = atomWithStorage<string>('colorM','dark');
 export {
   isConnectedAtom,
   colorModeAtom,
+  useLineIconsAtom,
+  lightModeAtom,
   nftContractAtom,
   walletAtom,
   jsonAtom,

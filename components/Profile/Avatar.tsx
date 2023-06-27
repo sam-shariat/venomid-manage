@@ -29,7 +29,8 @@ const Avatar = ({url} : Props) => {
       boxShadow="0 0 20px #00000070"
       my={5}
       zIndex={100}
-      alt="netspot"
+      alt="VID Profile Image"
+      textAlign={'center'}
     />
   );
 }

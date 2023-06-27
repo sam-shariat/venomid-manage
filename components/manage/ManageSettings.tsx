@@ -25,12 +25,12 @@ export default function ManageSettings({ json, nftAddress }: Props) {
       </Text>
       <Button px={4} variant="solid" size='lg' borderRadius={12} justifyContent='space-between' onClick={()=> setUseLineIcons(!useLineIcons)}>
         <Text>Use Line Icons</Text>
-        <Switch as={Box} bg={'none'} size='lg' isChecked={useLineIcons} onClick={()=> setUseLineIcons(!useLineIcons)}/>
+        <Switch colorScheme='green' as={Box}  bg={'none'} size='lg' isChecked={useLineIcons} onClick={()=> setUseLineIcons(!useLineIcons)}/>
       </Button>
-      <Button px={4} variant="solid" size='lg' borderRadius={12} justifyContent='space-between' onClick={()=> setLightMode(!lightMode)}>
+      {/* <Button px={4} variant="solid" size='lg' borderRadius={12} justifyContent='space-between' onClick={()=> setLightMode(!lightMode)}>
         <Text>Light Colors</Text>
-        <Switch as={Box} bg={'none'} size='lg' isChecked={lightMode} onClick={()=> setLightMode(!lightMode)}/>
-      </Button>
+        <Switch colorScheme='green'  bg={'none'} size='lg' isChecked={lightMode} onClick={()=> setLightMode(!lightMode)}/>
+      </Button> */}
     </Stack>
   );
 }

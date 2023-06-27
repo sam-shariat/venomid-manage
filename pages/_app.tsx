@@ -1,38 +1,22 @@
 import type { AppProps } from 'next/app';
-import { SWRConfig } from 'swr';
-import { fetcher } from 'core/utils';
 import ThemeProvider from 'components/Provider/ThemeProvider';
 import Layout from 'components/Layout';
 import { useDirectionSetter } from 'core/lib/hooks/use-directionSetter';
-import { SessionProvider } from 'next-auth/react';
-import type { Session } from 'next-auth';
+import { VenomConfig } from 'venom-react-hooks';
+import { initVenomConnect } from 'components/venomConnect/configure';
 import '../styles/globals.css';
 
-function MyApp({
-  Component,
-  pageProps: { session, ...pageProps },
-}: AppProps<{ session: Session }>) {
+function MyApp({ Component, pageProps }: AppProps) {
   useDirectionSetter();
 
   return (
-    <SessionProvider session={session}>
-      <ThemeProvider>
-        <SWRConfig
-          value={{
-            fetcher,
-            provider: () => new Map(),
-            onError: (error, key) => {
-              /**
-               * Handle error globaly from SWR
-               */
-            },
-          }}>
-          <Layout>
-            <Component {...pageProps} />
-          </Layout>
-        </SWRConfig>
-      </ThemeProvider>
-    </SessionProvider>
+    <ThemeProvider>
+      <VenomConfig initVenomConnect={initVenomConnect}>
+        <Layout>
+          <Component {...pageProps} />
+        </Layout>
+      </VenomConfig>
+    </ThemeProvider>
   );
 }
 

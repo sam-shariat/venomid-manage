@@ -1,18 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { CONTRACT_ADDRESS, SITE_URL } from 'core/utils/constants';
+import { SITE_URL } from 'core/utils/constants';
 // Our implemented util
 import { BaseNftJson, getAddressesFromIndex, getNftsByIndexes, saltCode } from 'core/utils/nft';
-import { venomContractAtom, venomSProviderAtom, addressAtom, isConnectedAtom } from 'core/atoms';
-import { useAtom, useAtomValue } from 'jotai';
 import NextLink from 'next/link';
 import {
   Button,
   Container,
-  Heading,
   Text,
-  InputGroup,
-  Input,
-  InputLeftAddon,
   Stack,
   SimpleGrid,
   Box,
@@ -31,6 +25,7 @@ import { useTranslate } from 'core/lib/hooks/use-translate';
 import Logo from 'components/Layout/Logo';
 import { sleep } from 'core/utils';
 import { ConnectButton } from 'components/venomConnect';
+import { useConnect, useVenomProvider } from 'venom-react-hooks';
 
 interface Message {
   type: any;
@@ -40,13 +35,12 @@ interface Message {
 }
 
 function ManageSection() {
+  const { provider } = useVenomProvider();
+  const {isConnected, account} = useConnect();
   const [listIsEmpty, setListIsEmpty] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [nftjsons, setNftJsons] = useState<BaseNftJson[] | undefined>(undefined);
-  const provider = useAtomValue(venomSProviderAtom);
-  const venomContract = useAtomValue(venomContractAtom);
-  const isConnected = useAtomValue(isConnectedAtom);
-  const userAddress = useAtomValue(addressAtom);
+  //const provider = useAtom(venomSProviderAtom)
   const { t } = useTranslate();
   const [notMobile] = useMediaQuery('(min-width: 800px)');
   const [message, setMessage] = useState<Message>({ type: '', title: '', msg: '', link: '' });
@@ -62,7 +56,7 @@ function ManageSection() {
       if (!provider?.isInitialized) return;
       setIsLoading(true);
       setListIsEmpty(false);
-      const saltedCode = await saltCode(provider, userAddress);
+      const saltedCode = await saltCode(provider, String(account?.address));
       // Hash it
       const codeHash = await provider.getBocHash(String(saltedCode));
       if (!codeHash) {
@@ -85,9 +79,10 @@ function ManageSection() {
       setIsLoading(false);
     }
   };
+
   useEffect(() => {
     async function getNfts() {
-      if (userAddress && isConnected && provider) {
+      if (account && isConnected && provider) {
         if (!provider?.isInitialized) {
           console.log('provider not ready');
           await sleep(1000);
@@ -97,10 +92,10 @@ function ManageSection() {
       }
 
       loadNFTs();
-      if (!userAddress) setListIsEmpty(false);
+      if (!account) setListIsEmpty(false);
     }
     getNfts();
-  }, [userAddress, isConnected, provider]);
+  }, [isConnected, provider]);
   return (
     <Box>
       <Container
@@ -193,7 +188,7 @@ function ManageSection() {
               ))}
             </SimpleGrid>
           </Stack>
-          {!userAddress && (
+          {!isConnected && (
             <Center my={8} flexDirection="column" minH={'75vh'}>
               <Text my={4}>{t('venomWalletConnect')}</Text>
               <ConnectButton />

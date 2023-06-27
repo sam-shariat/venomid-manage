@@ -64,12 +64,12 @@ export default function Header() {
             </NextLink>
             {notMobile && (
               <NextLink href="https://venomid.network" passHref>
-                <Button variant="ghost" textAlign="left">
-                  Claim VID
+                <Button variant='outline' textAlign="left">
+                  Claim Venom ID
                 </Button>
               </NextLink>
             )}
-            {notMobile && (
+            {/* {notMobile && (
               <NextLink href="https://venomid.network/#profile" passHref>
                 <Button variant="ghost" textAlign="left">
                   Profile
@@ -89,9 +89,10 @@ export default function Header() {
                   About
                 </Button>
               </NextLink>
-            )}
+            )} */}
           </HStack>
           <HStack dir="ltr">
+          
             <ConnectButton />
             {notMobile && (
               <IconButton
@@ -132,11 +133,11 @@ export default function Header() {
           <DrawerBody>
             <Stack py={4}>
               <NextLink href="https://venomid.network/" passHref>
-                <Button variant="ghost" width="100%" justifyContent="left">
+                <Button width="100%" justifyContent="left">
                   Claim VID
                 </Button>
               </NextLink>
-              <NextLink href="https://venomid.network/#profile" passHref>
+              {/* <NextLink href="https://venomid.network/#profile" passHref>
                 <Button variant="ghost" width="100%" justifyContent="left">
                   Profile
                 </Button>
@@ -150,7 +151,7 @@ export default function Header() {
                 <Button variant="ghost" width="100%" justifyContent="left">
                   About
                 </Button>
-              </NextLink>
+              </NextLink> */}
             </Stack>
             
           </DrawerBody>

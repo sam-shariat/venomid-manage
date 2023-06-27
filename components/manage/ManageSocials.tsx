@@ -1,7 +1,6 @@
 import { Stack } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import ManageLink from 'components/manage/ManageLink';
-import { signIn, signOut, useSession } from "next-auth/react"
 import {
   RiTwitterFill,
   RiTelegramFill,
@@ -28,7 +27,6 @@ import {
 } from 'react-icons/ri';
 import { useAtom, useAtomValue } from 'jotai';
 import {
-  addressAtom,
   discordAtom,
   facebookAtom,
   githubAtom,
@@ -50,7 +48,6 @@ interface Props {
 
 export default function ManageSocials({ json, nftAddress }: Props) {
   const [twitter, setTwitter] = useAtom(twitterAtom);
-  const wallet = useAtomValue(addressAtom);
   const useLineIcons = useAtomValue(useLineIconsAtom);
   const [discord, setDiscord] = useAtom(discordAtom);
   const [medium, setMedium] = useAtom(mediumAtom);
@@ -62,12 +59,6 @@ export default function ManageSocials({ json, nftAddress }: Props) {
   const [opensea, setOpensea] = useAtom(openseaAtom);
   const [telegram, setTelegram] = useAtom(telegramAtom);
   const [facebook, setFacebook] = useAtom(facebookAtom);
-  const { data: session, status } = useSession()
-
-  function verifyTwitter(){
-    console.log('verifying twitter');
-    signIn()
-  }
 
   useEffect(() => {
     setTwitter(json.socials.twitter);

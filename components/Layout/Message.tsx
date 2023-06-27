@@ -26,7 +26,7 @@ export default function MessageAlert({message, notMobile}: Props){
               gap={2}
               borderRadius={10}>
               <AlertIcon />
-              <Box width={'100%'}>
+              <Box width={notMobile ? 'xs' : '100%'}>
                 <AlertTitle>{message.title.toUpperCase()}</AlertTitle>
                 <AlertDescription>{message.msg}</AlertDescription>
               </Box>

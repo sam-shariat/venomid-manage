@@ -51,14 +51,22 @@ import {
   isConnectedAtom,
   nftContractAtom,
 } from 'core/atoms';
-import { SITE_DESCRIPTION, SITE_TITLE, VENOMSCAN_NFT } from 'core/utils/constants';
+import {
+  SITE_DESCRIPTION,
+  SITE_PROFILE_URL,
+  SITE_TITLE,
+  VENOMSCAN_NFT,
+} from 'core/utils/constants';
 import { ConnectButton } from 'components/venomConnect';
 import { getNft } from 'core/utils/nft';
 import NFTAbi from 'abi/Nft.abi.json';
 import { Message } from 'types';
 import MessageAlert from 'components/Layout/Message';
+import { useConnect, useVenomProvider } from 'venom-react-hooks';
 
 const ManagePage: NextPage = () => {
+  const { provider } = useVenomProvider();
+  const { isConnected, account } = useConnect();
   const { t } = useTranslate();
   const [name, setName] = useAtom(nameAtom);
   const [bio, setBio] = useAtom(bioAtom);
@@ -66,9 +74,6 @@ const ManagePage: NextPage = () => {
   const [eth, setEth] = useAtom(ethAtom);
   const twitter = useAtomValue(twitterAtom);
   const discord = useAtomValue(discordAtom);
-  const provider = useAtomValue(venomSProviderAtom);
-  const isConnected = useAtomValue(isConnectedAtom);
-  const userAddress = useAtomValue(addressAtom);
   const medium = useAtomValue(mediumAtom);
   const linkedin = useAtomValue(linkedinAtom);
   const youtube = useAtomValue(youtubeAtom);
@@ -78,7 +83,7 @@ const ManagePage: NextPage = () => {
   const opensea = useAtomValue(openseaAtom);
   const telegram = useAtomValue(telegramAtom);
   const facebook = useAtomValue(facebookAtom);
-  const address = useAtomValue(addressAtom);
+  const address = account?.address.toString();
   const [notMobile] = useMediaQuery('(min-width: 800px)');
   const { colorMode } = useColorMode();
   const [avatar, setAvatar] = useAtom(avatarAtom);
@@ -163,14 +168,14 @@ const ManagePage: NextPage = () => {
     if (provider.isInitialized) {
       console.log('saving ', provider);
       setIsSaving(true);
-      console.log('data : ',minFee,userAddress,_jsonHash,nftContract);
+      console.log('data : ', minFee, account?.address, _jsonHash, nftContract);
       // @ts-ignore: Unreachable code error
       const saveTx = await nftContract.methods
         .setData({ data: String(_jsonHash) })
         .send({
           amount: String(minFee),
           bounce: true,
-          from: new Address(userAddress),
+          from: account?.address,
         })
         .catch((e: any) => {
           if (e.code === 3) {
@@ -195,7 +200,11 @@ const ManagePage: NextPage = () => {
             .tap((tx_in_tree: any) => {
               console.log('tx_in_tree : ', tx_in_tree);
               if (tx_in_tree.account.equals(nftAddress)) {
-                receiptTx = tx_in_tree;
+                setMessage({
+                  type: 'success',
+                  title: 'Save Successful',
+                  msg: 'Venom ID Profile Saved Successfuly, You can now View and Share your venom profile Link'
+                });
               }
             })
             .finished();
@@ -261,7 +270,7 @@ const ManagePage: NextPage = () => {
 
   const changedJson = {
     name: name,
-    venomAddress: userAddress,
+    venomAddress: account?.address,
     btcAddress: btc,
     ethAddress: eth,
     bio: bio,
@@ -284,7 +293,7 @@ const ManagePage: NextPage = () => {
 
   useEffect(() => {
     async function getProfileJson() {
-      if (userAddress && isConnected && provider) {
+      if (account && isConnected && provider) {
         try {
           if (provider?.isInitialized === false) {
             console.log('provider not ready');
@@ -294,7 +303,7 @@ const ManagePage: NextPage = () => {
           }
           console.log('getting nft : ', nftAddress);
           setIsLoading(true);
-          if(nftContract === undefined){
+          if (nftContract === undefined) {
             const _nftContract = new provider.Contract(NFTAbi, new Address(nftAddress));
             console.log('_nftContract ', _nftContract);
             setNftContract(_nftContract);
@@ -303,8 +312,21 @@ const ManagePage: NextPage = () => {
           console.log('nftJson : ', nftJson);
           const ipfsData = nftJson.attributes?.find((att) => att.trait_type === 'DATA')?.value;
           if (ipfsData === '') {
-            setJson({ name: nftJson.name, venomAddress: userAddress, socials: {} });
+            setJson({
+              name: nftJson.name,
+              venomAddress: String(account.address),
+              btcAddress: '',
+              ethAddress: '',
+              bio: '',
+              avatar: '',
+              lineIcons: false,
+              socials: {},
+            });
             setName(String(nftJson.name));
+            setBio('');
+            setBtc('');
+            setEth('');
+            setAvatar('');
             setIsLoading(false);
             return;
           }
@@ -324,7 +346,7 @@ const ManagePage: NextPage = () => {
       }
     }
     getProfileJson();
-  }, [userAddress, isConnected, provider]);
+  }, [account]);
 
   return (
     <>
@@ -342,7 +364,7 @@ const ManagePage: NextPage = () => {
         <link rel="icon" href={json && !isLoading ? json.avatar : '/logos/vidicon.svg'} />
       </Head>
 
-      {address !== '' ? (
+      {isConnected ? (
         <Container
           as="main"
           maxW="container.lg"
@@ -357,7 +379,7 @@ const ManagePage: NextPage = () => {
               my={4}
               mt={10}
               textShadow="0 0 20px #00000070">
-              {!isLoading ? json.name : 'Loading Venom ID'}
+              {!isLoading && json ? json.name : 'Loading Venom ID'}
             </Heading>
             {avatar ? <Avatar url={avatar} /> : <Avatar url={'/logos/vidbg.svg'} />}
             <Button
@@ -368,7 +390,7 @@ const ManagePage: NextPage = () => {
               onClick={() => imageFileSelect !== undefined && imageFileSelect.click()}>
               Select Avatar Image
             </Button>
-            {!isLoading ? (
+            {!isLoading && json ? (
               <Flex mt={6} direction={'column'} gap={4} width="100%">
                 <Link
                   size="lg"
@@ -423,7 +445,7 @@ const ManagePage: NextPage = () => {
                 Bio & Socials
               </Text>
             )}
-            {!isLoading && (
+            {!isLoading && json && (
               <Textarea
                 minWidth="xs"
                 my={4}
@@ -438,8 +460,8 @@ const ManagePage: NextPage = () => {
                 onChange={(e) => setBio(e.currentTarget.value)}
               />
             )}
-            {!isLoading && <ManageSocials json={json} nftAddress={nftAddress} />}
-            {!isLoading && <ManageSettings json={json} nftAddress={nftAddress} />}
+            {!isLoading && json && <ManageSocials json={json} nftAddress={nftAddress} />}
+            {!isLoading && json && <ManageSettings json={json} nftAddress={nftAddress} />}
             <MessageAlert message={message} notMobile={notMobile} />
             <Button
               mt={10}
@@ -453,7 +475,14 @@ const ManagePage: NextPage = () => {
               onClick={uploadJson}>
               Save Profile
             </Button>
-            <Button disabled={isLoading} mt={2} width={notMobile ? 'md' : 'xs'} size="lg">
+            <Button
+              as={Link}
+              href={SITE_PROFILE_URL + name}
+              target="_blank"
+              disabled={isLoading}
+              mt={2}
+              width={notMobile ? 'md' : 'xs'}
+              size="lg">
               View Venom Profile
             </Button>
           </>

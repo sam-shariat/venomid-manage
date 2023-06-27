@@ -50,6 +50,7 @@ import {
   venomSProviderAtom,
   isConnectedAtom,
   nftContractAtom,
+  useLineIconsAtom,
 } from 'core/atoms';
 import {
   SITE_DESCRIPTION,
@@ -63,6 +64,7 @@ import NFTAbi from 'abi/Nft.abi.json';
 import { Message } from 'types';
 import MessageAlert from 'components/Layout/Message';
 import { useConnect, useVenomProvider } from 'venom-react-hooks';
+import Logo from 'components/Layout/Logo';
 
 const ManagePage: NextPage = () => {
   const { provider } = useVenomProvider();
@@ -83,6 +85,7 @@ const ManagePage: NextPage = () => {
   const opensea = useAtomValue(openseaAtom);
   const telegram = useAtomValue(telegramAtom);
   const facebook = useAtomValue(facebookAtom);
+  const lineIcons = useAtomValue(useLineIconsAtom);
   const address = account?.address.toString();
   const [notMobile] = useMediaQuery('(min-width: 800px)');
   const { colorMode } = useColorMode();
@@ -288,7 +291,7 @@ const ManagePage: NextPage = () => {
       opensea: opensea,
       telegram: telegram,
     },
-    lineIcons: false,
+    lineIcons: lineIcons,
   };
 
   useEffect(() => {
@@ -348,6 +351,10 @@ const ManagePage: NextPage = () => {
     getProfileJson();
   }, [account]);
 
+  // useEffect(()=> {
+  //   setMessage({ type: '', title: '', msg: '', link: '' })
+  // },[changedJson])
+  
   return (
     <>
       <Head>
@@ -468,8 +475,8 @@ const ManagePage: NextPage = () => {
               width={notMobile ? 'md' : 'xs'}
               size="lg"
               color="white"
-              isLoading={jsonUploading}
-              disabled={isLoading}
+              isLoading={jsonUploading || isSaving || isConfirming}
+              disabled={isLoading || isSaving || isConfirming}
               loadingText={isSaving ? 'Saving To VID NFT' : isConfirming ? 'Confirming...' : ''}
               backgroundColor="var(--venom1)"
               onClick={uploadJson}>
@@ -481,9 +488,11 @@ const ManagePage: NextPage = () => {
               target="_blank"
               disabled={isLoading}
               mt={2}
+              gap={2}
               width={notMobile ? 'md' : 'xs'}
               size="lg">
-              View Venom Profile
+                <Logo />
+              View at VenomID.Link
             </Button>
           </>
         </Container>

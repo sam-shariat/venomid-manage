@@ -206,32 +206,12 @@ const ManagePage: NextPage = () => {
                 setMessage({
                   type: 'success',
                   title: 'Save Successful',
-                  msg: 'Venom ID Profile Saved Successfuly, You can now View and Share your venom profile Link'
+                  msg: 'Venom ID Profile Saved Successfuly, You can now View and Share your venom profile Link',
                 });
               }
             })
             .finished();
 
-        let events = await nftContract.decodeTransactionEvents({
-          transaction: receiptTx as Transaction,
-        });
-        console.log(events);
-        // if (events.length !== 1 || events[0].event !== 'NftCreated') {
-        //   setMessage({
-        //     type: 'error',
-        //     title: 'Error',
-        //     msg: 'Something went wrong, Please try again',
-        //   });
-        // } else {
-        //   // @ts-ignore: Unreachable code error
-        //   const nftAddress = String(events[0].data?.nft && events[0].data?.nft?._address);
-        //   setMessage({
-        //     type: 'success',
-        //     title: 'Mint Successful',
-        //     msg: 'Venom ID Claimed Successfuly, You can now manage and share your venom profile',
-        //     link: VENOMSCAN_NFT + nftAddress,
-        //   });
-        // }
         setIsSaving(false);
         setIsConfirming(false);
         console.log(events);
@@ -354,7 +334,7 @@ const ManagePage: NextPage = () => {
   // useEffect(()=> {
   //   setMessage({ type: '', title: '', msg: '', link: '' })
   // },[changedJson])
-  
+
   return (
     <>
       <Head>
@@ -491,7 +471,7 @@ const ManagePage: NextPage = () => {
               gap={2}
               width={notMobile ? 'md' : 'xs'}
               size="lg">
-                <Logo />
+              <Logo />
               View at VenomID.Link
             </Button>
           </>

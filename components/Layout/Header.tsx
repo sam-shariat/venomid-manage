@@ -64,7 +64,7 @@ export default function Header() {
             </NextLink>
             {notMobile && (
               <NextLink href="https://venomid.network" passHref>
-                <Button variant='outline' textAlign="left">
+                <Button variant='outline' textAlign="left" borderWidth={1} borderColor="grey">
                   Claim Venom ID
                 </Button>
               </NextLink>

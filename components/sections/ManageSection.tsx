@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { SITE_URL } from 'core/utils/constants';
-// Our implemented util
+import MessageAlert from 'components/Layout/Message';
 import { BaseNftJson, getAddressesFromIndex, getNftsByIndexes, saltCode } from 'core/utils/nft';
 import NextLink from 'next/link';
 import {
@@ -26,24 +25,26 @@ import Logo from 'components/Layout/Logo';
 import { sleep } from 'core/utils';
 import { ConnectButton } from 'components/venomConnect';
 import { useConnect, useVenomProvider } from 'venom-react-hooks';
-
-interface Message {
-  type: any;
-  title: string;
-  msg: string;
-  link?: string;
-}
+import { primaryNameAtom, venomContractAtom, venomContractAddressAtom } from 'core/atoms';
+import { useAtom, useAtomValue } from 'jotai';
+import { Address, Transaction } from 'everscale-inpage-provider';
+import { Message } from 'types';
 
 function ManageSection() {
   const { provider } = useVenomProvider();
-  const {isConnected, account} = useConnect();
+  const { isConnected, account } = useConnect();
   const [listIsEmpty, setListIsEmpty] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [nftjsons, setNftJsons] = useState<BaseNftJson[] | undefined>(undefined);
-  //const provider = useAtom(venomSProviderAtom)
+  const venomContract = useAtomValue(venomContractAtom);
+  const venomContractAddress = useAtomValue(venomContractAddressAtom);
   const { t } = useTranslate();
+  const [primaryName, setPrimaryName] = useAtom(primaryNameAtom);
   const [notMobile] = useMediaQuery('(min-width: 800px)');
   const [message, setMessage] = useState<Message>({ type: '', title: '', msg: '', link: '' });
+  const [isSaving, setIsSaving] = useState(false);
+  const [isConfirming, setIsConfirming] = useState(false);
+  const minFee = 660000000;
   const { colorMode } = useColorMode();
   if (nftjsons) {
     console.log(nftjsons);
@@ -90,12 +91,81 @@ function ManageSection() {
           return;
         }
       }
-
       loadNFTs();
       if (!account) setListIsEmpty(false);
     }
     getNfts();
   }, [isConnected, provider]);
+
+  async function setAsPrimary(_nftAddress: string, _name: string) {
+    if (!isConnected) {
+      setMessage({
+        type: 'info',
+        title: 'connect wallet',
+        msg: 'please connect your venom wallet',
+      });
+      return;
+    }
+    if (!provider) {
+      setMessage({
+        type: 'info',
+        title: 'Provider Not Ready',
+        msg: 'Please wait a few seconds and try again, Your Wallet Provider is not ready, yet',
+      });
+      return;
+    }
+    setMessage({ type: '', title: '', msg: '' });
+    console.log('before saving',_nftAddress,_name.slice(0,-4));
+    if (provider.isInitialized) {
+      console.log('saving ', provider);
+      setIsSaving(true);
+      const setPrimaryTx = await venomContract?.methods
+        .setPrimaryName({ _nftAddress: new Address(_nftAddress), _name: _name.slice(0,-4) })
+        .send({
+          amount: String(minFee),
+          bounce: true,
+          from: account?.address,
+        })
+        .catch((e: any) => {
+          if (e.code === 3) {
+            // rejected by a user
+            setIsSaving(false);
+            return Promise.resolve(null);
+          } else {
+            setIsSaving(false);
+            console.log(e);
+            return Promise.reject(e);
+          }
+        });
+
+      if (setPrimaryTx) {
+        console.log('setPrimary tx : ', setPrimaryTx);
+        setIsConfirming(true);
+        let receiptTx: Transaction | undefined;
+        const subscriber = provider && new provider.Subscriber();
+        if (subscriber)
+          await subscriber
+            .trace(setPrimaryTx)
+            .tap((tx_in_tree: any) => {
+              console.log('tx_in_tree : ', tx_in_tree);
+              if (tx_in_tree.account.equals(venomContractAddress)) {
+                setMessage({
+                  type: 'success',
+                  title: 'Update Successful',
+                  msg: _name + ' was succesfully set as your primary name',
+                });
+              }
+            })
+            .finished();
+
+        setIsSaving(false);
+        setIsConfirming(false);
+        setPrimaryName({ nftAddress: new Address(_nftAddress), name: _name.slice(0,-4) })
+        loadNFTs();
+      }
+      console.log('save primary finished');
+    }
+  }
   return (
     <Box>
       <Container
@@ -106,50 +176,23 @@ function ManageSection() {
         placeItems="center"
         minH="75vh">
         <>
-          {message.msg.length > 0 && (
-            <Alert
-              flexDirection={notMobile ? 'row' : 'column'}
-              alignItems={notMobile ? 'left' : 'center'}
-              justifyContent={notMobile ? 'left' : 'center'}
-              textAlign={notMobile ? 'left' : 'center'}
-              status={message.type}
-              gap={2}
-              borderRadius={10}>
-              <AlertIcon />
-              <Box width={'100%'}>
-                <AlertTitle>{message.title.toUpperCase()}</AlertTitle>
-                <AlertDescription>{message.msg}</AlertDescription>
-              </Box>
-              {message.link && (
-                <Box>
-                  <Link href={message.link} target="_blank" id={`venom-id-nft-link`}>
-                    <Button m={1} minWidth={120}>
-                      View NFT
-                    </Button>
-                  </Link>
-                  <Link href={SITE_URL} target="_blank" id={`venom-id-manage-nft-link`}>
-                    <Button m={1} color='white' minWidth={120} bgColor={'var(--purple1)'}>
-                      Manage VID
-                    </Button>
-                  </Link>
-                </Box>
-              )}
-            </Alert>
-          )}
           <Stack direction={['column']} pb={4} pt={notMobile ? 10 : 6} width="100%" gap={2}>
-            {isConnected && <Text
-              width={'100%'}
-              textAlign={'center'}
-              fontWeight="bold"
-              fontSize={notMobile ? '4xl' : '2xl'}
-              my={notMobile ? 10 : 4}>
-              {t('yourVids')}
-            </Text>}
+            {isConnected && (
+              <Text
+                width={'100%'}
+                textAlign={'center'}
+                fontWeight="bold"
+                fontSize={notMobile ? '4xl' : '2xl'}
+                my={notMobile ? 10 : 4}>
+                {t('yourVids')}
+              </Text>
+            )}
             {isLoading && (
               <Center width={'100%'} height={150}>
                 <Spinner size="lg" />
               </Center>
             )}
+            <MessageAlert message={message} notMobile={notMobile} />
             <SimpleGrid columns={[1, 1, nftjsons && nftjsons?.length > 1 ? 2 : 1]} gap={4}>
               {nftjsons?.map((nft) => (
                 <Center
@@ -158,7 +201,9 @@ function ManageSection() {
                   flexDirection={'column'}
                   gap={2}
                   background={colorMode === 'dark' ? 'blackAlpha.300' : 'white'}
-                  borderColor={'blackAlpha.200'}
+                  borderColor={
+                    primaryName.name === nft.name.slice(0, -4) ? 'grey' : 'blackAlpha.200'
+                  }
                   borderWidth={1}
                   p={4}
                   borderRadius={12}>
@@ -174,8 +219,17 @@ function ManageSection() {
                     {nft.name}
                     <Logo />
                   </Flex>
+                  <Button
+                    disabled={primaryName.name === nft.name.slice(0, -4) || isSaving || isConfirming}
+                    color="white"
+                    bgColor={'var(--venom2)'}
+                    isLoading={isSaving || isConfirming}
+                    onClick={()=> setAsPrimary(nft.address,nft.name)}
+                    minW={350}>
+                    {primaryName.name === nft.name.slice(0, -4) ? 'Primary Name' : 'Set As Primary'}
+                  </Button>
                   <NextLink href={'manage/' + nft.address} passHref>
-                    <Button color='white' bgColor={'var(--purple2)'} minW={350}>
+                    <Button color="white" bgColor={'var(--purple2)'} minW={350}>
                       Manage {nft.name}
                     </Button>
                   </NextLink>
@@ -194,9 +248,11 @@ function ManageSection() {
               <ConnectButton />
             </Center>
           )}
-          {isConnected && <Text fontWeight="light" fontSize={notMobile ? '2xl' : 'xl'} my={notMobile ? 10 : 6}>
-            {t('manageDescription')}
-          </Text>}
+          {isConnected && (
+            <Text fontWeight="light" fontSize={notMobile ? '2xl' : 'xl'} my={notMobile ? 10 : 6}>
+              {t('manageDescription')}
+            </Text>
+          )}
         </>
       </Container>
     </Box>

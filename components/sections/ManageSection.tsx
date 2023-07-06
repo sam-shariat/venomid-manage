@@ -202,7 +202,7 @@ function ManageSection() {
                   gap={2}
                   background={colorMode === 'dark' ? 'blackAlpha.300' : 'white'}
                   borderColor={
-                    primaryName.name === nft?.name.slice(0, -4) ? 'grey' : 'blackAlpha.200'
+                    (nft?.name !== undefined && primaryName.name === nft?.name.slice(0, -4)) ? 'grey' : 'blackAlpha.200'
                   }
                   borderWidth={1}
                   p={4}
@@ -220,7 +220,7 @@ function ManageSection() {
                     <Logo />
                   </Flex>
                   <Button
-                    disabled={primaryName.name === nft?.name.slice(0, -4) || isSaving || isConfirming}
+                    disabled={(nft?.name !== undefined && primaryName.name === nft?.name.slice(0, -4)) || isSaving || isConfirming}
                     color="white"
                     bgColor={'var(--venom2)'}
                     isLoading={isSaving || isConfirming}

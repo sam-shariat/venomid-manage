@@ -202,7 +202,7 @@ function ManageSection() {
                   gap={2}
                   background={colorMode === 'dark' ? 'blackAlpha.300' : 'white'}
                   borderColor={
-                    primaryName && primaryName?.name === nft.name.slice(0, -4) ? 'grey' : 'blackAlpha.200'
+                    primaryName.name === nft?.name.slice(0, -4) ? 'grey' : 'blackAlpha.200'
                   }
                   borderWidth={1}
                   p={4}
@@ -220,13 +220,13 @@ function ManageSection() {
                     <Logo />
                   </Flex>
                   <Button
-                    disabled={primaryName.name === nft.name.slice(0, -4) || isSaving || isConfirming}
+                    disabled={primaryName.name === nft?.name.slice(0, -4) || isSaving || isConfirming}
                     color="white"
                     bgColor={'var(--venom2)'}
                     isLoading={isSaving || isConfirming}
-                    onClick={()=> setAsPrimary(nft.address,nft.name)}
+                    onClick={()=> setAsPrimary(nft?.address,nft.name)}
                     minW={350}>
-                    {primaryName.name === nft.name.slice(0, -4) ? 'Primary Name' : 'Set As Primary'}
+                    {primaryName.name === nft?.name.slice(0, -4) ? 'Primary Name' : 'Set As Primary'}
                   </Button>
                   <NextLink href={'manage/' + nft.address} passHref>
                     <Button color="white" bgColor={'var(--purple2)'} minW={350}>

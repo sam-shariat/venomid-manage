@@ -35,7 +35,7 @@ export default function ConnectButton() {
   const [primaryName, setPrimaryName] = useAtom(primaryNameAtom);
   const venomContractAddress = useAtomValue(venomContractAddressAtom);
   const [venomContract, setVenomContract] = useAtom(venomContractAtom);
-  const { onCopy } = useClipboard(address);
+  const { onCopy } = useClipboard(String(address));
 
   async function getPrimary() {
     if (!provider) return;
@@ -46,7 +46,7 @@ export default function ConnectButton() {
       .getPrimaryName({ _owner: new Address(address) })
       .call();
     console.log(primaryName);
-    if (primaryName?.name !== '') {
+    if (primaryName && primaryName?.name !== '') {
       setPrimaryName(primaryName);
     }
   }

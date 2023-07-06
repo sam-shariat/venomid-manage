@@ -202,7 +202,7 @@ function ManageSection() {
                   gap={2}
                   background={colorMode === 'dark' ? 'blackAlpha.300' : 'white'}
                   borderColor={
-                    primaryName.name === nft.name.slice(0, -4) ? 'grey' : 'blackAlpha.200'
+                    primaryName && primaryName?.name === nft.name.slice(0, -4) ? 'grey' : 'blackAlpha.200'
                   }
                   borderWidth={1}
                   p={4}

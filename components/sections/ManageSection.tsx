@@ -224,9 +224,9 @@ function ManageSection() {
                     color="white"
                     bgColor={'var(--venom2)'}
                     isLoading={isSaving || isConfirming}
-                    onClick={()=> setAsPrimary(nft?.address,nft.name)}
+                    onClick={()=> setAsPrimary(String(nft?.address),nft.name)}
                     minW={350}>
-                    {primaryName.name === nft?.name.slice(0, -4) ? 'Primary Name' : 'Set As Primary'}
+                    {(nft?.name !== undefined && primaryName.name === nft?.name.slice(0, -4)) ? 'Primary Name' : 'Set As Primary'}
                   </Button>
                   <NextLink href={'manage/' + nft.address} passHref>
                     <Button color="white" bgColor={'var(--purple2)'} minW={350}>

@@ -101,6 +101,7 @@ export default function ConnectButton() {
               width={100}
               py={0}
               border={1}
+              zIndex={199}
               borderColor={'grey'}
               bg={colorMode === 'light' ? 'var(--lightGrey)' : 'var(--darkGradient)'}>
               {primaryName.name !== '' && (

@@ -224,7 +224,7 @@ function ManageSection() {
                     color="white"
                     bgColor={'var(--venom2)'}
                     isLoading={isSaving || isConfirming}
-                    onClick={()=> setAsPrimary(String(nft?.address),nft.name)}
+                    onClick={()=> setAsPrimary(String(nft?.address),String(nft?.name))}
                     minW={350}>
                     {(nft?.name !== undefined && primaryName.name === nft?.name.slice(0, -4)) ? 'Primary Name' : 'Set As Primary'}
                   </Button>

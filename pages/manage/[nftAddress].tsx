@@ -214,7 +214,6 @@ const ManagePage: NextPage = () => {
 
         setIsSaving(false);
         setIsConfirming(false);
-        console.log(events);
       }
       console.log('save finished');
     }

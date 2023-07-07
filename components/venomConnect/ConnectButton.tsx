@@ -83,7 +83,7 @@ export default function ConnectButton() {
                     fontWeight={colorMode === 'light' ? 'semibold' : 'light'}
                     textAlign={'left'}
                     my={'0 !important'}>
-                    {primaryName.name !== '' ? primaryName.name : truncAddress(address)}
+                    {primaryName?.name !== '' ? primaryName.name : truncAddress(address)}
                   </Text>
                   <Text
                     fontWeight={colorMode === 'light' ? 'semibold' : 'light'}

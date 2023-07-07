@@ -122,7 +122,7 @@ export default function ConnectButton() {
               </LinkBox>
               <MenuItem display="flex" gap={2} onClick={onCopy}>
                 <FaRegCopy />
-                Copy {truncAddress(address)}
+                Copy {truncAddress(String(address))}
               </MenuItem>
               <MenuItem onClick={disconnect} display="flex" gap={2}>
                 <FaSignOutAlt /> Logout

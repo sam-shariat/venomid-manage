@@ -463,7 +463,7 @@ const ManagePage: NextPage = () => {
             </Button>
             <Button
               as={Link}
-              href={SITE_PROFILE_URL + name}
+              href={SITE_PROFILE_URL + name.slice(0,-4)}
               target="_blank"
               disabled={isLoading}
               mt={2}

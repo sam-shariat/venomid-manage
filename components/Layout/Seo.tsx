@@ -6,9 +6,10 @@ export default function Seo() {
   const origin = SITE_URL;
   return (
     <DefaultSeo
+      title={SITE_TITLE}
       defaultTitle={SITE_TITLE}
       titleTemplate={`%s | ${SITE_DESCRIPTION}`}
-      description={SITE_FULL_DESCRIPTION}
+      description={SITE_DESCRIPTION}
       canonical={origin}
       themeColor={'#101212'}
       defaultOpenGraphImageWidth={1200}

@@ -347,15 +347,15 @@ const ManagePage: NextPage = () => {
       <Head>
         <title>
           {json && !isLoading ? json.name : SITE_TITLE} |{' '}
-          {json && !isLoading ? json.bio : SITE_DESCRIPTION}
+          {json && !isLoading && json.bio !== '' ? json.bio : SITE_DESCRIPTION}
         </title>
         <meta
           name="description"
           content={`${json && !isLoading ? json.name : SITE_TITLE} | ${
-            json && !isLoading ? json.bio : SITE_DESCRIPTION
+            json && !isLoading && json.bio !== '' ? json.bio : SITE_DESCRIPTION
           }`}
         />
-        <link rel="icon" href={json && !isLoading ? json.avatar : '/logos/vidicon.svg'} />
+        <link rel="icon" href={json && !isLoading && json.avatar !== '' ? json.avatar : '/logos/vidicon.svg'} />
       </Head>
 
       {isConnected ? (

@@ -1,7 +1,6 @@
 import Header from './Header';
 import Footer from './Footer';
 import React, { useEffect } from 'react';
-import { Seo } from './Seo';
 
 type Props = {
   children: React.ReactNode;

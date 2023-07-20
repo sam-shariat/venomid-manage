@@ -9,7 +9,7 @@ export default function Seo() {
       title={SITE_TITLE}
       defaultTitle={SITE_TITLE}
       titleTemplate={`%s | ${SITE_DESCRIPTION}`}
-      description={SITE_DESCRIPTION}
+      description={SITE_FULL_DESCRIPTION}
       canonical={origin}
       themeColor={'#101212'}
       defaultOpenGraphImageWidth={1200}
@@ -33,7 +33,7 @@ export default function Seo() {
       additionalLinkTags={[
         {
           rel: 'icon',
-          href: `/logos/vidicon.svg`,
+          href: `/logos/vidicon.png`,
         },
         {
           rel: 'apple-touch-icon',

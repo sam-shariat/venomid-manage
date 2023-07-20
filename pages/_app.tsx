@@ -4,8 +4,8 @@ import Layout from 'components/Layout';
 import { useDirectionSetter } from 'core/lib/hooks/use-directionSetter';
 import { VenomConfig } from 'venom-react-hooks';
 import { initVenomConnect } from 'components/venomConnect/configure';
-import '../styles/globals.css';
 import { Analytics } from '@vercel/analytics/react';
+import '../styles/globals.css';
 
 function MyApp({ Component, pageProps }: AppProps) {
   useDirectionSetter();

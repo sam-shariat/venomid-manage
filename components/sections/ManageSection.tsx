@@ -9,10 +9,6 @@ import {
   Stack,
   SimpleGrid,
   Box,
-  Alert,
-  AlertIcon,
-  AlertTitle,
-  AlertDescription,
   Center,
   Flex,
   Link,
@@ -115,12 +111,12 @@ function ManageSection() {
       return;
     }
     setMessage({ type: '', title: '', msg: '' });
-    console.log('before saving',_nftAddress,_name.slice(0,-4));
+    console.log('before saving', _nftAddress, _name.slice(0, -4));
     if (provider.isInitialized) {
       console.log('saving ', provider);
       setIsSaving(true);
       const setPrimaryTx = await venomContract?.methods
-        .setPrimaryName({ _nftAddress: new Address(_nftAddress), _name: _name.slice(0,-4) })
+        .setPrimaryName({ _nftAddress: new Address(_nftAddress), _name: _name.slice(0, -4) })
         .send({
           amount: String(minFee),
           bounce: true,
@@ -160,7 +156,7 @@ function ManageSection() {
 
         setIsSaving(false);
         setIsConfirming(false);
-        setPrimaryName({ nftAddress: new Address(_nftAddress), name: _name.slice(0,-4) })
+        setPrimaryName({ nftAddress: new Address(_nftAddress), name: _name.slice(0, -4) });
         loadNFTs();
       }
       console.log('save primary finished');
@@ -202,7 +198,9 @@ function ManageSection() {
                   gap={2}
                   background={colorMode === 'dark' ? 'blackAlpha.300' : 'white'}
                   borderColor={
-                    (nft?.name !== undefined && primaryName.name === nft?.name.slice(0, -4)) ? 'grey' : 'blackAlpha.200'
+                    nft?.name !== undefined && primaryName.name === nft?.name.slice(0, -4)
+                      ? 'grey'
+                      : 'blackAlpha.200'
                   }
                   borderWidth={1}
                   p={4}
@@ -220,13 +218,19 @@ function ManageSection() {
                     <Logo />
                   </Flex>
                   <Button
-                    disabled={(nft?.name !== undefined && primaryName.name === nft?.name.slice(0, -4)) || isSaving || isConfirming}
+                    disabled={
+                      (nft?.name !== undefined && primaryName.name === nft?.name.slice(0, -4)) ||
+                      isSaving ||
+                      isConfirming
+                    }
                     color="white"
                     bgColor={'var(--venom2)'}
                     isLoading={isSaving || isConfirming}
-                    onClick={()=> setAsPrimary(String(nft?.address),String(nft?.name))}
+                    onClick={() => setAsPrimary(String(nft?.address), String(nft?.name))}
                     minW={350}>
-                    {(nft?.name !== undefined && primaryName.name === nft?.name.slice(0, -4)) ? 'Primary Name' : 'Set As Primary'}
+                    {nft?.name !== undefined && primaryName.name === nft?.name.slice(0, -4)
+                      ? 'Primary Name'
+                      : 'Set As Primary'}
                   </Button>
                   <NextLink href={'manage/' + nft.address} passHref>
                     <Button color="white" bgColor={'var(--purple2)'} minW={350}>
@@ -241,6 +245,21 @@ function ManageSection() {
                 </Center>
               ))}
             </SimpleGrid>
+            {listIsEmpty && !isLoading && (
+              <Center display='flex' flexDirection="column" gap={4}>
+                <Text fontSize="xl">You don't own any Venom IDs</Text>
+                <Button
+                  as={Link}
+                  href="https://venomid.network"
+                  target="_blank"
+                  variant="outline"
+                  textAlign="left"
+                  borderWidth={1}
+                  borderColor="grey">
+                  Claim Your Venom ID
+                </Button>
+              </Center>
+            )}
           </Stack>
           {!isConnected && (
             <Center my={8} flexDirection="column" minH={'75vh'}>

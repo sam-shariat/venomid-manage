@@ -56,6 +56,7 @@ import {
   SITE_DESCRIPTION,
   SITE_PROFILE_URL,
   SITE_TITLE,
+  SITE_CLAIM_URL,
   VENOMSCAN_NFT,
 } from 'core/utils/constants';
 import { ConnectButton } from 'components/venomConnect';
@@ -273,6 +274,13 @@ const ManagePage: NextPage = () => {
     lineIcons: lineIcons,
   };
 
+  const shareProfile = async () => {
+    let url = SITE_PROFILE_URL + name.slice(0, -4);
+    let txt = `Check out my Venom ID profile ${url} ,you can claim your own venom ID NFT at ${SITE_CLAIM_URL} @venomid_network @venom_network`;
+    let href = `https://twitter.com/intent/tweet?original_referer=${SITE_PROFILE_URL}&text=${txt}&url=${url}`;
+    window.open(href);
+  };
+
   useEffect(() => {
     async function getProfileJson() {
       if (account && isConnected && provider) {
@@ -462,8 +470,17 @@ const ManagePage: NextPage = () => {
               Save Profile
             </Button>
             <Button
+              mt={2}
+              width={notMobile ? 'md' : 'xs'}
+              size="lg"
+              color="white"
+              backgroundColor="var(--red1)"
+              onClick={shareProfile}>
+              Share Profile
+            </Button>
+            <Button
               as={Link}
-              href={SITE_PROFILE_URL + name.slice(0,-4)}
+              href={SITE_PROFILE_URL + name.slice(0, -4)}
               target="_blank"
               disabled={isLoading}
               mt={2}

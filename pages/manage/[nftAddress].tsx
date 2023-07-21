@@ -276,7 +276,7 @@ const ManagePage: NextPage = () => {
 
   const shareProfile = async () => {
     let url = SITE_PROFILE_URL + name.slice(0, -4);
-    let txt = `Check out my Venom ID profile NFT on the venom blockchain at ${url} \n \nYou can claim your own venom ID NFT on the venom blockchain \n\n@venomid_network \n@venom_network`;
+    let txt = "Check out my Venom ID profile NFT on the venom blockchain powered by @venomid_network";
     let href = `https://twitter.com/intent/tweet?original_referer=${SITE_CLAIM_URL}&text=${txt}&url=${url}`;
     window.open(href);
   };

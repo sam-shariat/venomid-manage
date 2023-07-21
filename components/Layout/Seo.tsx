@@ -3,7 +3,7 @@ import { SITE_DESCRIPTION, SITE_FULL_DESCRIPTION, SITE_TITLE, SITE_URL, SOCIAL_T
 import { DefaultSeo } from 'next-seo'
 
 export default function Seo() {
-  const origin = SITE_URL;
+  const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : SITE_URL;
   return (
     <DefaultSeo
       title={SITE_TITLE}

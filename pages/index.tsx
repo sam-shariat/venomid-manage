@@ -5,15 +5,17 @@ import Seo from 'components/Layout/Seo'
 import { SITE_DESCRIPTION, SITE_FULL_DESCRIPTION, SITE_TITLE } from 'core/utils/constants';
 
 const Home: NextPage = () => {
+  const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : SITE_URL;
   return (
     <>
     <Seo />
-      {/* <Head>
-        <title>{`${SITE_TITLE} | ${SITE_DESCRIPTION}`}</title>
-        <meta name="description" content={SITE_FULL_DESCRIPTION} />
-        <link rel="icon" type="image/svg+xml" href="/logos/vidicon.svg"/>
-        <link rel="icon" type="image/png" href="/logos/vidicon.png"/>
-      </Head> */}
+    <Head>
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={SITE_TITLE} />
+        <meta name="twitter:description" content={SITE_DESCRIPTION} />
+        <meta name="twitter:image" content={`${origin}/vidorigin.png`} />
+        <link rel="icon" type="image/png" href="/logos/vidicon.png" />
+      </Head>
       
       {/* <ClaimSection /> */}
       <ManageSection />

@@ -2,7 +2,7 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import ManageSection from 'components/sections/ManageSection';
 import Seo from 'components/Layout/Seo'
-import { SITE_DESCRIPTION, SITE_FULL_DESCRIPTION, SITE_TITLE } from 'core/utils/constants';
+import { SITE_DESCRIPTION, SITE_URL, SITE_TITLE } from 'core/utils/constants';
 
 const Home: NextPage = () => {
   const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : SITE_URL;

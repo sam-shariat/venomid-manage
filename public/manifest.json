@@ -1,6 +1,6 @@
 {
-    "name": "Venom ID Tools",
-    "short_name": "VID",
+    "name": "VenomID Tools",
+    "short_name": "VIDTools",
     "icons": [
       {
         "src": "/logos/vidicon.png",

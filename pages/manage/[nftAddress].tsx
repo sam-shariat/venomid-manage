@@ -386,6 +386,7 @@ const ManagePage: NextPage = () => {
                       color="white"
                       bgColor={'black'}>
                       <IconButton
+                        aria-label='paste btc address'
                         onClick={() => navigator.clipboard.readText().then((text) => setBtc(text))}>
                         <RiFileCopy2Line />
                       </IconButton>
@@ -413,6 +414,7 @@ const ManagePage: NextPage = () => {
                       color="white"
                       bgColor={'black'}>
                       <IconButton
+                      aria-label='connect eth wallet'
                         onClick={async () => {
                           if (ethAddressFromWallet) {
                             setEth(ethAddressFromWallet);
@@ -426,6 +428,7 @@ const ManagePage: NextPage = () => {
                     </Tooltip>
                     <Tooltip
                       borderRadius={4}
+                      aria-label='paste eth address'
                       label={<Text p={2}>Paste</Text>}
                       hasArrow
                       color="white"

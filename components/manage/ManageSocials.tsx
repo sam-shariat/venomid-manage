@@ -48,6 +48,7 @@ export default function ManageSocials({ json, nftAddress }: Props) {
     setSocialsArray(_newSocialsArray);
   };
 
+  // @ts-ignore: Unreachable code error
   const SortableCon = SortableContainer(({ children }) => {
     return <ul>{children}</ul>;
   });

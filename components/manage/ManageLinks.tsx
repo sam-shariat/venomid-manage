@@ -30,7 +30,8 @@ export default function ManageLinks({ json, nftAddress }: Props) {
   const [linksArray, setLinksArray] = useAtom(linksArrayAtom);
   const [notMobile] = useMediaQuery('(min-width: 800px)');
   const { colorMode } = useColorMode();
-
+  
+  // @ts-ignore: Unreachable code error
   const SortableCon = SortableContainer(({ children }) => {
     return <ul>{children}</ul>;
   });

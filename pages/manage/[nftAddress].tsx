@@ -420,7 +420,7 @@ const ManagePage: NextPage = () => {
                             setEth(ethAddressFromWallet);
                           } else {
                             await connectWithThirdweb(metamaskConfig);
-                            setEth(ethAddressFromWallet);
+                            setEth(String(ethAddressFromWallet));
                           }
                         }}>
                         <Metamask />

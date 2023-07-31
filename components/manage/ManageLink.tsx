@@ -197,7 +197,7 @@ export default function ManageLink({
                     onClick={() => imageFileSelect !== undefined && imageFileSelect.click()}>
                     <RiUploadCloudLine size="24" /> Upload Image
                   </Button>
-                  <ImageLink url={_image} alt={_title} loading={imageUploading} />
+                  <ImageLink url={String(_image)} alt={_title} loading={imageUploading} />
                 </>
               )}
 

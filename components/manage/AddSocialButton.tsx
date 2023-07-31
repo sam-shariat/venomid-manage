@@ -30,7 +30,7 @@ import { SocialIcon } from 'components/logos';
 export default function AddSocialButton() {
   const { colorMode } = useColorMode();
   const [notMobile] = useMediaQuery('(min-width: 800px)');
-  const [availableSocials, setAvailableSocials] = useState([]);
+  const [availableSocials, setAvailableSocials] = useState<string[]>([]);
   const [selectedSocial, setSelectedSocial] = useState('');
   const [selectedSocialUrl, setSelectedSocialUrl] = useState('');
   const [socialsArray, setSocialsArray] = useAtom(socialsArrayAtom);

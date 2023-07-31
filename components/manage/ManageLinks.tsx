@@ -28,13 +28,13 @@ interface Props {
 }
 
 interface SortableConProps {
-  children: Element[];
+  children: React.ReactNode;
   onSortEnd: ({ oldIndex, newIndex }: { oldIndex: any; newIndex: any }) => void;
   useDragHandle: true;
 }
 
 interface SortableItemProps {
-  children: Element[];
+  children: React.ReactNode;
   index: number;
 }
 

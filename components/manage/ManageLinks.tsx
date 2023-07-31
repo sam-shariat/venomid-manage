@@ -27,13 +27,19 @@ interface Props {
   nftAddress: string;
 }
 
+interface SortableConProps {
+  children: Element[];
+  onSortEnd: ({ oldIndex, newIndex }: { oldIndex: any; newIndex: any }) => void;
+  useDragHandle: true;
+}
+
 export default function ManageLinks({ json, nftAddress }: Props) {
   const [linksArray, setLinksArray] = useAtom(linksArrayAtom);
   const [notMobile] = useMediaQuery('(min-width: 800px)');
   const { colorMode } = useColorMode();
 
   // @ts-ignore: Unreachable code error
-  const SortableCon = SortableContainer(({ children }) => {
+  const SortableCon = SortableContainer(({ children, onSortEnd, useDragHandle }:SortableConProps) => {
     return <ul>{children}</ul>;
   });
 
@@ -46,7 +52,7 @@ export default function ManageLinks({ json, nftAddress }: Props) {
             title,
             url,
             image,
-            content
+            content,
           }
         : {
             type: item.type,
@@ -61,13 +67,13 @@ export default function ManageLinks({ json, nftAddress }: Props) {
 
   // @ts-ignore: Unreachable code error
   const removeLink = (index) => {
-    let _newLinksArray = arrayRemove(linksArray,index);
-    console.log(_newLinksArray)
+    let _newLinksArray = arrayRemove(linksArray, index);
+    console.log(_newLinksArray);
     setLinksArray(_newLinksArray);
   };
 
   // @ts-ignore: Unreachable code error
-  const SortableItem = SortableElement(({ children }) => (
+  const SortableItem: any = SortableElement(({ children }) => (
     <li style={{ listStyleType: 'none', padding: '0px 0px', margin: '12px 0px' }}>{children}</li>
   ));
 
@@ -75,7 +81,7 @@ export default function ManageLinks({ json, nftAddress }: Props) {
     // @ts-ignore: Unreachable code error
     let _links = [];
     if (json?.links) {
-      json?.links.map((link:CustomLink) => {
+      json?.links.map((link: CustomLink) => {
         _links.push({
           type: link.type,
           title: link.title,

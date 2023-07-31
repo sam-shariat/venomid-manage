@@ -29,6 +29,17 @@ interface Props {
   nftAddress: string;
 }
 
+interface SortableConProps {
+  children: React.ReactNode;
+  onSortEnd: ({ oldIndex, newIndex }: { oldIndex: any; newIndex: any }) => void;
+  useDragHandle: true;
+}
+
+interface SortableItemProps {
+  children: React.ReactNode;
+  index: number;
+}
+
 export default function ManageSocials({ json, nftAddress }: Props) {
   const useLineIcons = useAtomValue(useLineIconsAtom);
   const [socialsArray, setSocialsArray] = useAtom(socialsArrayAtom);
@@ -51,12 +62,12 @@ export default function ManageSocials({ json, nftAddress }: Props) {
   };
 
   // @ts-ignore: Unreachable code error
-  const SortableCon = SortableContainer(({ children }) => {
+  const SortableCon = SortableContainer(({ children, onSortEnd, useDragHandle }: SortableConProps) => {
     return <ul>{children}</ul>;
   });
 
   // @ts-ignore: Unreachable code error
-  const SortableItem = SortableElement(({ children }) => (
+  const SortableItem = SortableElement(({ children, index }: SortableItemProps) => (
     <li style={{ listStyleType: 'none', padding: '0px 0px', margin: '12px 0px' }}>{children}</li>
   ));
 

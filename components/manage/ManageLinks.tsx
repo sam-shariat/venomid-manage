@@ -89,6 +89,7 @@ export default function ManageLinks({ json, nftAddress }: Props) {
     setLinksArray(_links);
   }, []);
 
+  // @ts-ignore: Unreachable code error
   const onSortEnd = ({ oldIndex, newIndex }) => {
     setLinksArray(arrayMoveImmutable(linksArray, oldIndex, newIndex));
   };

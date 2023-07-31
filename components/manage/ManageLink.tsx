@@ -26,7 +26,6 @@ import React, { useEffect, useState } from 'react';
 import { capFirstLetter } from 'core/utils';
 import { ImageLink } from 'components/Profile';
 import { useStorageUpload } from '@thirdweb-dev/react';
-import axios from 'axios';
 
 const DragHandle = SortableHandle(() => (
   <span>

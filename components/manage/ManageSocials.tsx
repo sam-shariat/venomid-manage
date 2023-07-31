@@ -52,12 +52,12 @@ export default function ManageSocials({ json, nftAddress }: Props) {
   };
 
   // @ts-ignore: Unreachable code error
-  const SortableCon = SortableContainer(({ children, onSortEnd, useDragHandle }: SortableConProps) => {
+  const SortableCon = SortableContainer(({ children, onSortEnd, useDragHandle }) => {
     return <ul>{children}</ul>;
   });
 
   // @ts-ignore: Unreachable code error
-  const SortableItem = SortableElement(({ children, index }: SortableItemProps) => (
+  const SortableItem = SortableElement(({ children, index }) => (
     <li style={{ listStyleType: 'none', padding: '0px 0px', margin: '12px 0px' }}>{children}</li>
   ));
 

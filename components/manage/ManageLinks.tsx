@@ -33,11 +33,9 @@ export default function ManageLinks({ json, nftAddress }: Props) {
   const { colorMode } = useColorMode();
 
   // @ts-ignore: Unreachable code error
-  const SortableCon = SortableContainer(
-    ({ children, onSortEnd, useDragHandle }: SortableConProps) => {
-      return <ul>{children}</ul>;
-    }
-  );
+  const SortableCon = SortableContainer(({ children, onSortEnd, useDragHandle }) => {
+    return <ul>{children}</ul>;
+  });
 
   // @ts-ignore: Unreachable code error
   const setLinks = (index, title, url, image, content) => {

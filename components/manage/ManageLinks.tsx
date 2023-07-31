@@ -121,6 +121,7 @@ export default function ManageLinks({ json, nftAddress }: Props) {
 
           <AccordionPanel pb={4} minWidth="100%">
             <Stack gap={2}>
+            {// @ts-ignore: Unreachable code error}
               <SortableCon onSortEnd={onSortEnd} useDragHandle>
                 <>
                 {linksArray.map((item, index) => (

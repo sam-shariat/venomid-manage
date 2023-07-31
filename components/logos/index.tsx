@@ -80,6 +80,8 @@ const SocialIcon = ({ name, line }: SocialIconProps) => {
       return line ? <RiPhoneLine size="28" /> : <RiPhoneFill size="28" />;
     case 'whatsapp':
       return line ? <RiWhatsappLine size="28" /> : <RiWhatsappFill size="28" />;
+    default:
+      return <></>
   }
 };
 

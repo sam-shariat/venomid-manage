@@ -30,3 +30,14 @@ export interface CustomLink {
   image: string;
   content: string; 
 }
+
+export interface SortableConProps {
+  children: React.ReactNode;
+  onSortEnd: ({ oldIndex, newIndex }: { oldIndex: any; newIndex: any }) => void;
+  useDragHandle: true;
+}
+
+export interface SortableItemProps {
+  children: React.ReactNode;
+  index: number;
+}

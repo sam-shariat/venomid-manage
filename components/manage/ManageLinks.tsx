@@ -20,22 +20,11 @@ import { arrayMoveImmutable } from 'array-move';
 import AddLinkButton from './AddLinkButton';
 import ManageLink from './ManageLink';
 import { capFirstLetter, arrayRemove } from 'core/utils';
-import { CustomLink } from 'types';
+import { CustomLink, SortableItemProps, SortableConProps } from 'types';
 
 interface Props {
   json: any;
   nftAddress: string;
-}
-
-interface SortableConProps {
-  children: React.ReactNode;
-  onSortEnd: ({ oldIndex, newIndex }: { oldIndex: any; newIndex: any }) => void;
-  useDragHandle: true;
-}
-
-interface SortableItemProps {
-  children: React.ReactNode;
-  index: number;
 }
 
 export default function ManageLinks({ json, nftAddress }: Props) {

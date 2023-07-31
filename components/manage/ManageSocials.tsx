@@ -23,21 +23,11 @@ import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import { arrayMoveImmutable } from 'array-move';
 import AddSocialButton from './AddSocialButton';
 import { capFirstLetter, arrayRemove } from 'core/utils';
+import { SortableItemProps, SortableConProps } from 'types';
 
 interface Props {
   json: any;
   nftAddress: string;
-}
-
-interface SortableConProps {
-  children: React.ReactNode;
-  onSortEnd: ({ oldIndex, newIndex }: { oldIndex: any; newIndex: any }) => void;
-  useDragHandle: true;
-}
-
-interface SortableItemProps {
-  children: React.ReactNode;
-  index: number;
 }
 
 export default function ManageSocials({ json, nftAddress }: Props) {

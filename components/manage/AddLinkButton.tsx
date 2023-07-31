@@ -142,12 +142,12 @@ export default function AddLinkButton() {
                   border={1}
                   borderColor={'grey'}
                   bg={colorMode === 'light' ? 'var(--lightGrey)' : 'var(--darkGradient)'}>
-                  {availableLinks.map((item) => (
+                  {availableLinks.map((item) => item !== undefined && 
                     <MenuItem
                       gap={2}
-                      key={item.type}
+                      key={item?.type}
                       justifyContent="space-between"
-                      onClick={() => item !== undefined && item?.av && setType(item.type)}>
+                      onClick={() => item?.av && setType(item.type)}>
                       {capFirstLetter(item.type)}
                       {!item?.av && (
                         <Badge variant="outline" colorScheme="green">
@@ -155,7 +155,7 @@ export default function AddLinkButton() {
                         </Badge>
                       )}
                     </MenuItem>
-                  ))}
+                  )}
                 </MenuList>
               </Menu>
               {type && (

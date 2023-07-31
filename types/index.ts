@@ -1,4 +1,5 @@
 import { Address } from 'everscale-inpage-provider';
+import React, { ReactNode } from 'react';
 
 export interface State<T> {
   loading: boolean
@@ -32,12 +33,12 @@ export interface CustomLink {
 }
 
 export interface SortableConProps {
-  children: React.ReactNode;
+  children: ReactNode;
   onSortEnd: ({ oldIndex, newIndex }: { oldIndex: any; newIndex: any }) => void;
   useDragHandle: true;
 }
 
 export interface SortableItemProps {
-  children: React.ReactNode;
+  children: ReactNode;
   index: number;
 }

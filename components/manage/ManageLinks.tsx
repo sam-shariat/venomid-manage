@@ -32,7 +32,7 @@ export default function ManageLinks({ json, nftAddress }: Props) {
   const [notMobile] = useMediaQuery('(min-width: 800px)');
   const { colorMode } = useColorMode();
 
-  const SortableCon = SortableContainer(({ children, onSortEnd, useDragHandle }: SortableConProps) => {
+  const SortableCon = SortableContainer<SortableConProps>(({ children, onSortEnd, useDragHandle }) => {
     return <ul>{children}</ul>;
   });
 
@@ -66,7 +66,7 @@ export default function ManageLinks({ json, nftAddress }: Props) {
   };
 
   // @ts-ignore: Unreachable code error
-  const SortableItem = SortableElement(({ children, index }: SortableItemProps) => (
+  const SortableItem = SortableElement<SortableItemProps>(({ children, index }) => (
     <li style={{ listStyleType: 'none', padding: '0px 0px', margin: '12px 0px' }}>{children}</li>
   ));
 

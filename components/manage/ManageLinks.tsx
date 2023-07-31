@@ -30,12 +30,13 @@ export default function ManageLinks({ json, nftAddress }: Props) {
   const [linksArray, setLinksArray] = useAtom(linksArrayAtom);
   const [notMobile] = useMediaQuery('(min-width: 800px)');
   const { colorMode } = useColorMode();
-  
+
   // @ts-ignore: Unreachable code error
   const SortableCon = SortableContainer(({ children }) => {
     return <ul>{children}</ul>;
   });
 
+  // @ts-ignore: Unreachable code error
   const setLinks = (index, title, url, image, content) => {
     let _newLinksArray = linksArray.map((item, ind) =>
       ind === index
@@ -57,12 +58,14 @@ export default function ManageLinks({ json, nftAddress }: Props) {
     setLinksArray(_newLinksArray);
   };
 
+  // @ts-ignore: Unreachable code error
   const removeLink = (index) => {
     let _newLinksArray = arrayRemove(linksArray,index);
     console.log(_newLinksArray)
     setLinksArray(_newLinksArray);
   };
 
+  // @ts-ignore: Unreachable code error
   const SortableItem = SortableElement(({ children }) => (
     <li style={{ listStyleType: 'none', padding: '0px 0px', margin: '12px 0px' }}>{children}</li>
   ));

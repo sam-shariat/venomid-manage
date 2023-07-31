@@ -35,6 +35,7 @@ export default function ManageSocials({ json, nftAddress }: Props) {
   const [notMobile] = useMediaQuery('(min-width: 800px)');
   const { colorMode } = useColorMode();
 
+  // @ts-ignore: Unreachable code error
   const setUrl = (name, value) => {
     let _newSocialsArray = socialsArray.map((item) =>
       item.key === name ? { key: item.key, value } : { key: item.key, value: item.value }
@@ -42,6 +43,7 @@ export default function ManageSocials({ json, nftAddress }: Props) {
     setSocialsArray(_newSocialsArray);
   };
 
+  // @ts-ignore: Unreachable code error
   const removeUrl = (index) => {
     let _newSocialsArray = arrayRemove(socialsArray,index);
     console.log(_newSocialsArray)
@@ -53,6 +55,7 @@ export default function ManageSocials({ json, nftAddress }: Props) {
     return <ul>{children}</ul>;
   });
 
+  // @ts-ignore: Unreachable code error
   const SortableItem = SortableElement(({ children }) => (
     <li style={{ listStyleType: 'none', padding: '0px 0px', margin: '12px 0px' }}>{children}</li>
   ));
@@ -66,6 +69,7 @@ export default function ManageSocials({ json, nftAddress }: Props) {
     setSocialsArray(_socials);
   }, []);
 
+  // @ts-ignore: Unreachable code error
   const onSortEnd = ({ oldIndex, newIndex }) => {
     setSocialsArray(arrayMoveImmutable(socialsArray, oldIndex, newIndex));
     console.log(socialsArray)

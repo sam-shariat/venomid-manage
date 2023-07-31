@@ -127,7 +127,6 @@ export default function ManageLinks({ json, nftAddress }: Props) {
                   <SortableItem key={`item-${item.title}-${index}`} index={index}>
                     <>
                     <ManageLink
-                      key={`item-${item.key}`}
                       icon={<LinkIcon type={item.type} />}
                       title={item.title}
                       image={item.image}

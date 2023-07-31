@@ -111,7 +111,6 @@ export default function ManageSocials({ json, nftAddress }: Props) {
                       <SortableItem key={`item-${item.key}`} index={index}>
                         <>
                         <ManageSocial
-                          key={`item-${item.key}`}
                           icon={<SocialIcon line={useLineIcons} name={item.key} />}
                           title={capFirstLetter(item.key)}
                           url={item.value}

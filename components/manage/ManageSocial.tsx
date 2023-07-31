@@ -87,6 +87,7 @@ export default function ManageSocial({ title, icon, url, setUrl, removeUrl, ind 
                     color="white"
                     bgColor={'black'}>
                     <IconButton
+                      aria-label="paste-url"
                       mt={2}
                       mr={2}
                       onClick={() => navigator.clipboard.readText().then((text) => setTxt(text))}>

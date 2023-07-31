@@ -145,7 +145,7 @@ export default function ManageLink({
                 //onChange={(e) => setUrl(title.toLowerCase(),e.currentTarget.value)}
               />
 
-              {(type.indexOf('link') >= 0 || type.indexOf('video')) >= 0 && (
+              {(type.indexOf('link') >= 0 || type.indexOf('video') >= 0) && (
                 <InputGroup mt={2}>
                   <Input
                     size="lg"
@@ -163,6 +163,7 @@ export default function ManageLink({
                       bgColor={'black'}>
                       <IconButton
                         mt={2}
+                        aria-label='paste-url'
                         mr={2}
                         onClick={() => navigator.clipboard.readText().then((text) => setURL(text))}>
                         <RiFileCopy2Line />

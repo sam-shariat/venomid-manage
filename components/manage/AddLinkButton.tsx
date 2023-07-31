@@ -145,10 +145,11 @@ export default function AddLinkButton() {
                   {availableLinks.map((item) => (
                     <MenuItem
                       gap={2}
+                      key={item.type}
                       justifyContent="space-between"
-                      onClick={() => item.av && setType(item.type)}>
+                      onClick={() => item !== undefined && item?.av && setType(item.type)}>
                       {capFirstLetter(item.type)}
-                      {!item.av && (
+                      {!item?.av && (
                         <Badge variant="outline" colorScheme="green">
                           Soon
                         </Badge>
@@ -172,7 +173,7 @@ export default function AddLinkButton() {
                 </>
               )}
 
-              {(type.indexOf('link') >= 0 || type.indexOf('video')) >= 0 && (
+              {(type.indexOf('link') >= 0 || type.indexOf('video') >= 0) && (
                 <>
                   <InputGroup mt={2}>
                     <Input
@@ -192,6 +193,7 @@ export default function AddLinkButton() {
                         <IconButton
                           mt={2}
                           mr={2}
+                          aria-label='paste-url'
                           onClick={() =>
                             navigator.clipboard.readText().then((text) => setUrl(text))
                           }>

@@ -104,7 +104,9 @@ export default function AddSocialButton() {
                   borderColor={'grey'}
                   bg={colorMode === 'light' ? 'var(--lightGrey)' : 'var(--darkGradient)'}>
                   {availableSocials.map((item) => (
-                    <MenuItem onClick={() => setSelectedSocial(item)}>{item}</MenuItem>
+                    <MenuItem key={'i-' + item} onClick={() => setSelectedSocial(item)}>
+                      {item}
+                    </MenuItem>
                   ))}
                 </MenuList>
               </Menu>
@@ -127,6 +129,7 @@ export default function AddSocialButton() {
                       color="white"
                       bgColor={'black'}>
                       <IconButton
+                        aria-label="paste-url"
                         onClick={() =>
                           navigator.clipboard.readText().then((text) => setSelectedSocialUrl(text))
                         }>

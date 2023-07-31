@@ -100,7 +100,7 @@ export default function ConnectButton() {
                     color={primaryName?.name !== '' ? 'var(--venom2)' : 'gray.500'}
                     my={'0 !important'}>
                     {primaryName?.name !== ''
-                      ? capFirstLetter(primaryName.name)
+                      ? capFirstLetter(String(primaryName.name))
                       : truncAddress(String(address))}
                   </Text>
                 </Stack>

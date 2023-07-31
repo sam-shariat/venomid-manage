@@ -129,7 +129,7 @@ const ManagePage: NextPage = () => {
   };
 
   const uploadJson = async () => {
-    let socialsObj = {};
+    let socialsObj: any = {};
     socials.map((social) => {
       socialsObj[social['key']] = social['value'];
     });

@@ -25,6 +25,7 @@ import Logo from './Logo';
 import { RiMoonFill, RiSunFill, RiMenu2Fill, RiCloseFill } from 'react-icons/ri';
 import { Locale } from 'translations';
 import { useEffect } from 'react';
+import { ConnectWallet } from "@thirdweb-dev/react";
 
 export default function Header() {
   const [colorM,setColorM] = useAtom(colorModeAtom)
@@ -92,7 +93,7 @@ export default function Header() {
             )} */}
           </HStack>
           <HStack dir="ltr">
-          
+          {notMobile && (<ConnectWallet theme={colorMode} btnTitle="ETH Wallet" />)}
             <ConnectButton />
             {notMobile && (
               <IconButton
@@ -131,7 +132,8 @@ export default function Header() {
             </HStack>
           </DrawerHeader>
           <DrawerBody>
-            <Stack py={4}>
+            <Stack gap={2} pt={4}>
+              <ConnectWallet theme={colorMode} btnTitle="ETH Wallet" />
               <NextLink href="https://venomid.network/" passHref>
                 <Button width="100%" justifyContent="left">
                   Claim VID

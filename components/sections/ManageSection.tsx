@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import MessageAlert from 'components/Layout/Message';
 import { BaseNftJson, getAddressesFromIndex, getNftsByIndexes, saltCode } from 'core/utils/nft';
 import NextLink from 'next/link';
+import { Avatar } from 'components/Profile';
 import {
   Button,
   Container,
@@ -25,6 +26,7 @@ import { primaryNameAtom, venomContractAtom, venomContractAddressAtom } from 'co
 import { useAtom, useAtomValue } from 'jotai';
 import { Address, Transaction } from 'everscale-inpage-provider';
 import { Message } from 'types';
+import { AVATAR_API_URL } from 'core/utils/constants';
 
 function ManageSection() {
   const { provider } = useVenomProvider();
@@ -189,7 +191,7 @@ function ManageSection() {
               </Center>
             )}
             <MessageAlert message={message} notMobile={notMobile} />
-            <SimpleGrid columns={[1, 1, nftjsons && nftjsons?.length > 1 ? 2 : 1]} gap={4}>
+            <SimpleGrid columns={[1, 1, nftjsons && nftjsons?.length > 1 ? 2 : 1]} gap={4} width={'100%'}>
               {nftjsons?.map((nft) => (
                 <Center
                   width={'100%'}
@@ -203,19 +205,22 @@ function ManageSection() {
                       : 'blackAlpha.200'
                   }
                   borderWidth={1}
-                  p={4}
+                  p={'16px !important'}
                   borderRadius={12}>
                   <Flex
-                    minW={350}
+                    minW={320}
                     key={nft.name + ' name'}
-                    color={'var(--venom1)'}
-                    fontWeight={'bold'}
-                    fontSize={'2xl'}
                     gap={2}
-                    justifyContent={'space-between'}
+                    flexDirection={'column'}
+                    alignItems={'center'}
+                    justifyContent={'center'}
                     my={2}>
-                    {nft.name}
-                    <Logo />
+                    <Text 
+                    fontWeight={'bold'}
+                    fontSize={'2xl'} >{String(nft.name).slice(0,-4).toLowerCase()}</Text>
+                    <Box width={100}>
+                    <Avatar url={AVATAR_API_URL + String(nft.name).slice(0,-4).toLowerCase()} />
+                    </Box>
                   </Flex>
                   <Button
                     disabled={
@@ -227,18 +232,18 @@ function ManageSection() {
                     bgColor={'var(--venom2)'}
                     isLoading={isSaving || isConfirming}
                     onClick={() => setAsPrimary(String(nft?.address), String(nft?.name))}
-                    minW={350}>
+                    minW={320}>
                     {nft?.name !== undefined && primaryName.name === nft?.name.slice(0, -4)
                       ? 'Primary Name'
                       : 'Set As Primary'}
                   </Button>
                   <NextLink href={'manage/' + nft.address} passHref>
-                    <Button color="white" bgColor={'var(--purple2)'} minW={350}>
+                    <Button color="white" bgColor={'var(--purple2)'} minW={320}>
                       Manage {nft.name}
                     </Button>
                   </NextLink>
                   <Link href={nft.external_url} target="_blank">
-                    <Button minW={350} gap={2}>
+                    <Button minW={320} gap={2}>
                       {nft.external_url?.slice(8)}
                     </Button>
                   </Link>

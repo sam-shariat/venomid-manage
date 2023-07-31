@@ -4,7 +4,7 @@ import { initialAuthState } from './initialState';
 import { VenomConnect } from 'venom-connect';
 import { ProviderRpcClient } from 'everscale-inpage-provider';
 import { CONTRACT_ADDRESS } from 'core/utils/constants';
-import { PrimaryName } from 'types';
+import { PrimaryName, CustomLink, ObjectItem } from 'types';
 
 const walletAtom = atom<VenomConnect | undefined>(undefined);
 const primaryNameAtom = atom<PrimaryName>({name:''});
@@ -16,6 +16,12 @@ const ethAtom = atom("");
 const bioAtom = atom("");
 const avatarAtom = atom("");
 const twitterAtom = atom("");
+const galxeAtom = atom("");
+const zealyAtom = atom("");
+const mirrorAtom = atom("");
+const whatsAppAtom = atom("");
+const emailAtom = atom("");
+const phoneAtom = atom("");
 const discordAtom = atom("");
 const mediumAtom = atom("");
 const youtubeAtom = atom("");
@@ -29,6 +35,8 @@ const telegramAtom = atom("");
 const addressAtom = atom("");
 const jsonHashAtom = atom("");
 const balanceAtom = atom('0');
+const socialsArrayAtom = atom<ObjectItem[]>([]);
+const linksArrayAtom = atom<CustomLink[]>([]);
 const venomContractAddressAtom = atom(CONTRACT_ADDRESS)
 const venomSProviderAtom = atom<ProviderRpcClient | undefined>(undefined);
 const venomContractAtom = atom<any>(undefined);
@@ -43,6 +51,14 @@ const colorModeAtom = atomWithStorage<string>('colorM','dark');
 export {
   isConnectedAtom,
   colorModeAtom,
+  linksArrayAtom,
+  galxeAtom,
+  zealyAtom,
+  mirrorAtom,
+  whatsAppAtom,
+  emailAtom,
+  phoneAtom,
+  socialsArrayAtom,
   useLineIconsAtom,
   lightModeAtom,
   nftContractAtom,

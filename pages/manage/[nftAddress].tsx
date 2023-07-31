@@ -7,49 +7,43 @@ import {
   useMediaQuery,
   useColorMode,
   Button,
+  Tooltip,
   Container,
   Heading,
   Text,
   Flex,
   InputGroup,
   InputLeftAddon,
+  InputRightElement,
+  IconButton,
   Input,
   Textarea,
   Spinner,
   Center,
   Link,
+  Stack,
 } from '@chakra-ui/react';
-import { VenomFoundation, BTC, ETH } from 'components/logos';
+import { VenomFoundation, BTC, ETH, Metamask } from 'components/logos';
 import { useTranslate } from 'core/lib/hooks/use-translate';
 import { Avatar } from 'components/Profile';
 import { sleep, truncAddress } from 'core/utils';
 import axios from 'axios';
 import ManageSocials from 'components/manage/ManageSocials';
+import ManageLinks from 'components/manage/ManageLinks';
 import ManageSettings from 'components/manage/ManageSettings';
 import { useAtom, useAtomValue } from 'jotai';
 import {
   bioAtom,
   btcAtom,
-  discordAtom,
+  lightModeAtom,
   ethAtom,
-  facebookAtom,
-  githubAtom,
-  instagramAtom,
-  linkedinAtom,
-  mediumAtom,
-  openseaAtom,
-  pinterestAtom,
-  telegramAtom,
-  twitterAtom,
-  youtubeAtom,
   avatarAtom,
   nameAtom,
   jsonHashAtom,
   jsonAtom,
-  addressAtom,
-  venomSProviderAtom,
-  isConnectedAtom,
+  socialsArrayAtom,
   nftContractAtom,
+  linksArrayAtom,
   useLineIconsAtom,
 } from 'core/atoms';
 import {
@@ -66,28 +60,26 @@ import { Message } from 'types';
 import MessageAlert from 'components/Layout/Message';
 import { useConnect, useVenomProvider } from 'venom-react-hooks';
 import Logo from 'components/Layout/Logo';
+import { RiFileCopy2Line } from 'react-icons/ri';
+import { useAddress, useConnect as useThirdWebConnect, metamaskWallet, useStorageUpload } from '@thirdweb-dev/react';
+
+const metamaskConfig = metamaskWallet();
 
 const ManagePage: NextPage = () => {
   const { provider } = useVenomProvider();
   const { isConnected, account } = useConnect();
+  const { mutateAsync: upload } = useStorageUpload();
   const { t } = useTranslate();
+  const ethAddressFromWallet = useAddress();
+  const connectWithThirdweb = useThirdWebConnect();
   const [name, setName] = useAtom(nameAtom);
   const [bio, setBio] = useAtom(bioAtom);
+  const lightMode = useAtomValue(lightModeAtom);
   const [btc, setBtc] = useAtom(btcAtom);
   const [eth, setEth] = useAtom(ethAtom);
-  const twitter = useAtomValue(twitterAtom);
-  const discord = useAtomValue(discordAtom);
-  const medium = useAtomValue(mediumAtom);
-  const linkedin = useAtomValue(linkedinAtom);
-  const youtube = useAtomValue(youtubeAtom);
-  const github = useAtomValue(githubAtom);
-  const pinterest = useAtomValue(pinterestAtom);
-  const instagram = useAtomValue(instagramAtom);
-  const opensea = useAtomValue(openseaAtom);
-  const telegram = useAtomValue(telegramAtom);
-  const facebook = useAtomValue(facebookAtom);
+  const links = useAtomValue(linksArrayAtom);
+  const socials = useAtomValue(socialsArrayAtom);
   const lineIcons = useAtomValue(useLineIconsAtom);
-  const address = account?.address.toString();
   const [notMobile] = useMediaQuery('(min-width: 800px)');
   const { colorMode } = useColorMode();
   const [avatar, setAvatar] = useAtom(avatarAtom);
@@ -119,28 +111,51 @@ const ManagePage: NextPage = () => {
 
   const imageFileSelect = buildFileSelector();
 
+  const sendproFileToIPFS = async (e: any) => {
+    if (e) {
+      try {
+        const formData = [e];
+        console.log('uploading file to ipfs thirdweb');
+        setAvatarUploading(true);
+        const uris = await upload({ data: formData });
+        setAvatar('https://ipfs.io/ipfs/' + uris[0].slice(7));
+        setAvatarUploading(false);
+      } catch (error) {
+        alert('Error sending File to IPFS: ');
+        setAvatarUploading(false);
+        console.log(error);
+      }
+    }
+  };
+
   const uploadJson = async () => {
-    const data = JSON.stringify(changedJson);
+    let socialsObj = {};
+    socials.map((social) => {
+      socialsObj[social['key']] = social['value'];
+    });
+
+    const data = JSON.stringify({
+      name: name,
+      venomAddress: account?.address,
+      btcAddress: btc,
+      ethAddress: eth,
+      bio: bio,
+      avatar: avatar,
+      links: links,
+      socials: socialsObj,
+      lineIcons: lineIcons,
+      lightMode: lightMode
+    });
+
     console.log(data);
     try {
       console.log('uploading description to ipfs');
       setJsonUploading(true);
-      const resFile = await axios({
-        method: 'post',
-        url: 'https://api.pinata.cloud/pinning/pinJSONToIPFS',
-        data: data,
-        headers: {
-          Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
-          pinata_api_key: `${process.env.NEXT_PUBLIC_PINATA_API_KEY}`,
-          pinata_secret_api_key: `${process.env.NEXT_PUBLIC_PINATA_API_SECRET}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      setJsonHash('https://ipfs.io/ipfs/' + resFile.data.IpfsHash);
+      const uris = await upload({ data: [data] });
+      setJsonHash('https://ipfs.io/ipfs/' + uris[0].slice(7));
       setJsonUploading(false);
-      console.log('https://ipfs.io/ipfs/' + resFile.data.IpfsHash);
-      saveVid(resFile.data.IpfsHash);
+      console.log('https://ipfs.io/ipfs/' + uris[0].slice(7));
+      saveVid(uris[0].slice(7));
       //Take a look at your Pinata Pinned section, you will see a new file added to you list.
     } catch (error) {
       setJsonUploading(false);
@@ -220,63 +235,10 @@ const ManagePage: NextPage = () => {
     }
   }
 
-  const sendproFileToIPFS = async (e: any) => {
-    if (e) {
-      try {
-        const formData = new FormData();
-        formData.append('file', e);
-        console.log('uploading file to ipfs');
-        setAvatarUploading(true);
-        const resFile = await axios({
-          method: 'post',
-          url: 'https://api.pinata.cloud/pinning/pinFileToIPFS',
-          data: formData,
-          headers: {
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_PINATA_JWT}`,
-            pinata_api_key: `${process.env.NEXT_PUBLIC_PINATA_API_KEY}`,
-            pinata_secret_api_key: `${process.env.NEXT_PUBLIC_PINATA_API_SECRET}`,
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-
-        //const ImgHash = resFile.data.IpfsHash;
-        //console.log(ImgHash);
-        setAvatar('https://ipfs.io/ipfs/' + resFile.data.IpfsHash);
-        setAvatarUploading(false);
-      } catch (error) {
-        alert('Error sending File to IPFS: ');
-        setAvatarUploading(false);
-        console.log(error);
-      }
-    }
-  };
-
-  const changedJson = {
-    name: name,
-    venomAddress: account?.address,
-    btcAddress: btc,
-    ethAddress: eth,
-    bio: bio,
-    avatar: avatar,
-    socials: {
-      twitter: twitter,
-      discord: discord,
-      medium: medium,
-      youtube: youtube,
-      linkedin: linkedin,
-      github: github,
-      pinterest: pinterest,
-      facebook: facebook,
-      instagram: instagram,
-      opensea: opensea,
-      telegram: telegram,
-    },
-    lineIcons: lineIcons,
-  };
-
   const shareProfile = async () => {
     let url = SITE_PROFILE_URL + name.slice(0, -4);
-    let txt = "Check out my Venom ID profile NFT on the venom blockchain powered by @venomid_network";
+    let txt =
+      'Check out my Venom ID profile NFT on the venom blockchain powered by @venomid_network';
     let href = `https://twitter.com/intent/tweet?original_referer=${SITE_CLAIM_URL}&text=${txt}&url=${url}`;
     window.open(href);
   };
@@ -310,6 +272,7 @@ const ManagePage: NextPage = () => {
               bio: '',
               avatar: '',
               lineIcons: false,
+              links: [],
               socials: {},
             });
             setName(String(nftJson.name));
@@ -355,7 +318,10 @@ const ManagePage: NextPage = () => {
             json && !isLoading && json.bio !== '' ? json.bio : SITE_DESCRIPTION
           }`}
         />
-        <link rel="icon" href={json && !isLoading && json.avatar !== '' ? json.avatar : '/logos/vidicon.svg'} />
+        <link
+          rel="icon"
+          href={json && !isLoading && json.avatar !== '' ? json.avatar : '/logos/vidicon.svg'}
+        />
       </Head>
 
       {isConnected ? (
@@ -380,33 +346,31 @@ const ManagePage: NextPage = () => {
               isLoading={avatarUploading || isLoading}
               mb={4}
               color="white"
-              backgroundColor="var(--venom1)"
+              backgroundColor="var(--venom2)"
               onClick={() => imageFileSelect !== undefined && imageFileSelect.click()}>
               Select Avatar Image
             </Button>
             {!isLoading && json ? (
               <Flex mt={6} direction={'column'} gap={4} width="100%">
-                <Link
+                <Button
+                  variant="solid"
                   size="lg"
-                  href={VENOMSCAN_NFT + json.venomAddress}
+                  as={Link}
                   target="_blank"
-                  width={'100% !important'}>
-                  <Button
-                    variant="solid"
-                    size="lg"
-                    backgroundColor={colorMode === 'dark' ? 'whiteAlpha.100' : 'blackAlpha.100'}
-                    minWidth={notMobile ? 'md' : 'xs'}>
-                    <VenomFoundation /> Venom Address{' '}
-                    <Text px={2} color="var(--venom1)">
-                      {truncAddress(json.venomAddress)}
-                    </Text>
-                  </Button>
-                </Link>
+                  href={VENOMSCAN_NFT + json.venomAddress}
+                  backgroundColor={colorMode === 'dark' ? 'whiteAlpha.100' : 'blackAlpha.100'}
+                  minWidth={notMobile ? 'md' : 'xs'}>
+                  <VenomFoundation /> Venom Address{' '}
+                  <Text px={2} color="var(--venom1)">
+                    {truncAddress(json.venomAddress)}
+                  </Text>
+                </Button>
+
                 <InputGroup size="lg" minWidth="xs" borderColor="gray">
                   <InputLeftAddon>
                     <Flex>
                       {notMobile && <BTC />}
-                      BTC {notMobile && 'Address'}
+                      BTC
                     </Flex>
                   </InputLeftAddon>
                   <Input
@@ -414,19 +378,64 @@ const ManagePage: NextPage = () => {
                     value={json ? btc : 'Loading'}
                     onChange={(e) => setBtc(e.currentTarget.value)}
                   />
+                  <InputRightElement>
+                    <Tooltip
+                      borderRadius={4}
+                      label={<Text p={2}>Paste</Text>}
+                      hasArrow
+                      color="white"
+                      bgColor={'black'}>
+                      <IconButton
+                        onClick={() => navigator.clipboard.readText().then((text) => setBtc(text))}>
+                        <RiFileCopy2Line />
+                      </IconButton>
+                    </Tooltip>
+                  </InputRightElement>
                 </InputGroup>
                 <InputGroup size="lg" minWidth="xs" borderColor="gray">
                   <InputLeftAddon>
                     <Flex>
                       {notMobile && <ETH />}
-                      ETH {notMobile && 'Address'}
+                      ETH
                     </Flex>
                   </InputLeftAddon>
                   <Input
                     placeholder={'Enter Your ETH Address'}
                     value={json ? eth : 'Loading'}
                     onChange={(e) => setEth(e.currentTarget.value)}
+                    pr={'92px'}
                   />
+                  <InputRightElement gap={1} width={'92px'}>
+                    <Tooltip
+                      borderRadius={4}
+                      label={<Text p={2}>{ethAddressFromWallet ? 'Use Connected ETH Address' : 'Connect ETH Wallet'}</Text>}
+                      hasArrow
+                      color="white"
+                      bgColor={'black'}>
+                      <IconButton
+                        onClick={async () => {
+                          if (ethAddressFromWallet) {
+                            setEth(ethAddressFromWallet);
+                          } else {
+                            await connectWithThirdweb(metamaskConfig);
+                            setEth(ethAddressFromWallet);
+                          }
+                        }}>
+                        <Metamask />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip
+                      borderRadius={4}
+                      label={<Text p={2}>Paste</Text>}
+                      hasArrow
+                      color="white"
+                      bgColor={'black'}>
+                      <IconButton
+                        onClick={() => navigator.clipboard.readText().then((text) => setEth(text))}>
+                        <RiFileCopy2Line />
+                      </IconButton>
+                    </Tooltip>
+                  </InputRightElement>
                 </InputGroup>
               </Flex>
             ) : (
@@ -436,26 +445,30 @@ const ManagePage: NextPage = () => {
             )}
             {!isLoading && (
               <Text mt={10} fontWeight="bold" fontSize="xl">
-                Bio & Socials
+                Bio
               </Text>
             )}
             {!isLoading && json && (
               <Textarea
                 minWidth="xs"
                 my={4}
-                rows={4}
+                rows={5}
                 maxLength={500}
                 placeholder={"I'm Sam. Blockchain Developer ..."}
                 size="lg"
-                borderWidth={1}
-                borderColor="gray"
+                bg={colorMode === 'dark' ? 'whiteAlpha.100' : 'blackAlpha.100'}
+                variant="outline"
+                border="none"
                 resize={'none'}
                 value={json ? bio : 'Loading'}
                 onChange={(e) => setBio(e.currentTarget.value)}
               />
             )}
-            {!isLoading && json && <ManageSocials json={json} nftAddress={nftAddress} />}
-            {!isLoading && json && <ManageSettings json={json} nftAddress={nftAddress} />}
+            <Stack gap={2}>
+              {!isLoading && json && <ManageLinks json={json} nftAddress={nftAddress} />}
+              {!isLoading && json && <ManageSocials json={json} nftAddress={nftAddress} />}
+              {!isLoading && json && <ManageSettings json={json} nftAddress={nftAddress} />}
+            </Stack>
             <MessageAlert message={message} notMobile={notMobile} />
             <Button
               mt={10}

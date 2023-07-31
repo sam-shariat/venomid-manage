@@ -6,23 +6,25 @@ import {
   Center,
   Stack,
   useColorMode,
+  IconButton,
+  Flex,
   Menu,
   MenuButton,
   MenuList,
-  MenuItem,
+  Tooltip,
   LinkBox,
   LinkOverlay,
   useClipboard,
 } from '@chakra-ui/react';
 import { VenomFoundation, VenomScanIcon } from 'components/logos';
 import { SITE_PROFILE_URL, VENOMSCAN_NFT } from 'core/utils/constants';
-import { sleep, truncAddress } from 'core/utils';
+import { sleep, truncAddress, capFirstLetter } from 'core/utils';
 import React, { useEffect } from 'react';
 import { useConnect, useVenomProvider } from 'venom-react-hooks';
 import { useAtom, useAtomValue } from 'jotai';
 import { Address } from 'everscale-inpage-provider';
 import VenomAbi from 'abi/Collection.abi.json';
-import { FaSignOutAlt, FaRegCopy } from 'react-icons/fa';
+import { RiLogoutBoxRLine, RiFileCopyLine, RiCheckDoubleFill } from 'react-icons/ri';
 import LogoIcon from '../Layout/LogoIcon';
 import { primaryNameAtom, venomContractAddressAtom, venomContractAtom } from 'core/atoms';
 
@@ -35,14 +37,16 @@ export default function ConnectButton() {
   const [primaryName, setPrimaryName] = useAtom(primaryNameAtom);
   const venomContractAddress = useAtomValue(venomContractAddressAtom);
   const [venomContract, setVenomContract] = useAtom(venomContractAtom);
-  const { onCopy } = useClipboard(String(address));
+  const { onCopy, hasCopied } = useClipboard(String(address));
 
   async function getPrimary() {
     if (!provider) return;
     const _venomContract = new provider.Contract(VenomAbi, new Address(venomContractAddress));
     setVenomContract(_venomContract);
     // @ts-ignore: Unreachable code error
-    const { value0 } = await _venomContract?.methods.getPrimaryName({ _owner: new Address(address) }).call();
+    const { value0 } = await _venomContract?.methods
+      .getPrimaryName({ _owner: new Address(address) })
+      .call();
     console.log(value0);
     if (value0) {
       setPrimaryName(value0);
@@ -75,58 +79,102 @@ export default function ConnectButton() {
           </Button>
         ) : (
           <Menu>
-            <MenuButton as={Button} minH={'46px'}>
+            <MenuButton
+              as={Button}
+              minH={'58px'}
+              borderRadius={12}
+              bgColor={colorMode === 'light' ? 'whiteAlpha.900' : 'var(--dark)'}
+              variant={colorMode === 'light' ? 'solid' : 'outline'}>
               <Center>
                 <VenomFoundation />
-                <Stack gap={0} mx={1}>
+                <Stack gap={0.5} mx={1}>
                   <Text
-                    fontWeight={colorMode === 'light' ? 'semibold' : 'light'}
-                    textAlign={'left'}
-                    my={'0 !important'}>
-                    {primaryName?.name !== '' ? primaryName.name : truncAddress(String(address))}
-                  </Text>
-                  <Text
-                    fontWeight={colorMode === 'light' ? 'semibold' : 'light'}
+                    fontWeight={'semibold'}
                     textAlign={'left'}
                     my={'0 !important'}
-                    color="var(--venom1)">
+                    fontSize="14px">
                     {Math.round(Number(account?.balance) / 10e5) / 10e2} {notMobile ? 'VENOM' : ''}
+                  </Text>
+                  <Text
+                    fontWeight={'semibold'}
+                    textAlign={'left'}
+                    fontSize="14px"
+                    color={primaryName?.name !== '' ? 'var(--venom2)' : 'gray.500'}
+                    my={'0 !important'}>
+                    {primaryName?.name !== ''
+                      ? capFirstLetter(primaryName.name)
+                      : truncAddress(String(address))}
                   </Text>
                 </Stack>
               </Center>
             </MenuButton>
             <MenuList
-              width={100}
+              width={320}
               py={0}
-              border={1}
+              borderWidth={1}
               zIndex={199}
-              borderColor={'grey'}
-              bg={colorMode === 'light' ? 'var(--lightGrey)' : 'var(--darkGradient)'}>
+              borderColor={'gray.800'}
+              bg={colorMode === 'light' ? 'var(--white)' : 'var(--dark)'}>
+              <Flex p={5} alignItems="center" gap={1}>
+                <VenomFoundation />
+                <Stack gap={0.5} mx={1} flexGrow={1}>
+                  <Text
+                    fontWeight={'semibold'}
+                    textAlign={'left'}
+                    fontSize="14px"
+                    my={'0 !important'}>
+                    {primaryName?.name !== ''
+                      ? capFirstLetter(primaryName.name)
+                      : truncAddress(String(address))}
+                  </Text>
+                  <Text
+                    fontWeight={'semibold'}
+                    textAlign={'left'}
+                    my={'0 !important'}
+                    fontSize="14px"
+                    color="gray.500">
+                    {Math.round(Number(account?.balance) / 10e5) / 10e2} {notMobile ? 'VENOM' : ''}
+                  </Text>
+                </Stack>
+                <Tooltip
+                  borderRadius={4}
+                  label={<Text p={2}>Copy Address</Text>}
+                  color="white"
+                  bgColor={'black'}
+                  hasArrow>
+                  <IconButton onClick={onCopy} variant="ghost">
+                    {hasCopied ? <RiCheckDoubleFill size={22} /> : <RiFileCopyLine size={22} />}
+                  </IconButton>
+                </Tooltip>
+                <Tooltip
+                  borderRadius={4}
+                  label={<Text p={2}>Disconnect Wallet</Text>}
+                  hasArrow
+                  color="white"
+                  bgColor={'black'}>
+                  <IconButton onClick={disconnect} variant="ghost">
+                    <RiLogoutBoxRLine size={22} />
+                  </IconButton>
+                </Tooltip>
+              </Flex>
               {primaryName.name !== '' && (
-                <LinkBox as={MenuItem}>
-                  <LinkOverlay
-                    display="flex"
-                    gap={2}
-                    href={SITE_PROFILE_URL + primaryName.name}
-                    target="_blank">
-                    <LogoIcon />
-                    View VenomID
+                <LinkBox px={5}>
+                  <LinkOverlay href={SITE_PROFILE_URL + primaryName.name} target="_blank">
+                    <Button gap={2} variant="outline" width={'100%'} size="lg">
+                      <LogoIcon />
+                      View at VenomID.link
+                    </Button>
                   </LinkOverlay>
                 </LinkBox>
               )}
-              <LinkBox as={MenuItem}>
-                <LinkOverlay display="flex" gap={2} href={VENOMSCAN_NFT + address} target="_blank">
-                  <VenomScanIcon />
-                  View on VenomScan
+              <LinkBox p={5} pt={4}>
+                <LinkOverlay href={VENOMSCAN_NFT + address} target="_blank">
+                  <Button gap={2} variant="outline" width={'100%'} size="lg">
+                    <VenomScanIcon />
+                    View on VenomScan
+                  </Button>
                 </LinkOverlay>
               </LinkBox>
-              <MenuItem display="flex" gap={2} onClick={onCopy}>
-                <FaRegCopy />
-                Copy {truncAddress(String(address))}
-              </MenuItem>
-              <MenuItem onClick={disconnect} display="flex" gap={2}>
-                <FaSignOutAlt /> Logout
-              </MenuItem>
             </MenuList>
           </Menu>
         )}

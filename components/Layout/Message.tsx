@@ -24,6 +24,7 @@ export default function MessageAlert({message, notMobile}: Props){
               textAlign={notMobile ? 'left' : 'center'}
               status={message.type}
               gap={2}
+              mt={10}
               borderRadius={10}>
               <AlertIcon />
               <Box width={notMobile ? 'xs' : '100%'}>

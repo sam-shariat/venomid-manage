@@ -15,7 +15,7 @@ export default function ManageSettings({ json, nftAddress }: Props) {
 
   useEffect(() => {
     setUseLineIcons(json.lineIcons);
-    setLightMode(json.lineIcons);
+    setLightMode(json.lightMode);
   }, []);
 
   return (
@@ -38,6 +38,23 @@ export default function ManageSettings({ json, nftAddress }: Props) {
           size="lg"
           isChecked={useLineIcons}
           onClick={() => setUseLineIcons(!useLineIcons)}
+        />
+      </Button>
+      <Button
+        px={4}
+        variant="solid"
+        size="lg"
+        borderRadius={12}
+        justifyContent="space-between"
+        onClick={() => setLightMode(!lightMode)}>
+        <Text>Light Mode</Text>
+        <Switch
+          colorScheme="green"
+          as={Box}
+          bg={'none'}
+          size="lg"
+          isChecked={lightMode}
+          onClick={() => setLightMode(!lightMode)}
         />
       </Button>
       <Button px={4} variant="solid" size="lg" borderRadius={12} justifyContent="space-between">

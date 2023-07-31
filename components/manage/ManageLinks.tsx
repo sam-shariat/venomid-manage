@@ -28,9 +28,14 @@ interface Props {
 }
 
 interface SortableConProps {
-  children: Element[];
+  children: ReactFragment;
   onSortEnd: ({ oldIndex, newIndex }: { oldIndex: any; newIndex: any }) => void;
   useDragHandle: true;
+}
+
+interface SortableItemProps {
+  children: ReactFragment;
+  index: number;
 }
 
 export default function ManageLinks({ json, nftAddress }: Props) {
@@ -39,9 +44,11 @@ export default function ManageLinks({ json, nftAddress }: Props) {
   const { colorMode } = useColorMode();
 
   // @ts-ignore: Unreachable code error
-  const SortableCon = SortableContainer(({ children, onSortEnd, useDragHandle }:SortableConProps) => {
-    return <ul>{children}</ul>;
-  });
+  const SortableCon = SortableContainer(
+    ({ children, onSortEnd, useDragHandle }: SortableConProps) => {
+      return <ul>{children}</ul>;
+    }
+  );
 
   // @ts-ignore: Unreachable code error
   const setLinks = (index, title, url, image, content) => {
@@ -73,7 +80,7 @@ export default function ManageLinks({ json, nftAddress }: Props) {
   };
 
   // @ts-ignore: Unreachable code error
-  const SortableItem: any = SortableElement(({ children }) => (
+  const SortableItem: any = SortableElement(({ children, index }: SortableItemProps) => (
     <li style={{ listStyleType: 'none', padding: '0px 0px', margin: '12px 0px' }}>{children}</li>
   ));
 

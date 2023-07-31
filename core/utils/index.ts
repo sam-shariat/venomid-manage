@@ -13,8 +13,8 @@ const capFirstLetter = (str: string) => {
   return String(final);
 };
 
-const arrayRemove = (arr, index) => {
-  return arr.filter((item, ind) => index !== ind && item);
+const arrayRemove = (arr: Array, index: number) => {
+  return arr.filter((item: any, ind: number) => index !== ind && item);
 };
 
 export { http, fetcher, truncAddress, sleep, capFirstLetter, arrayRemove };

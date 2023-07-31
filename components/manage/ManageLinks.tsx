@@ -20,6 +20,7 @@ import { arrayMoveImmutable } from 'array-move';
 import AddLinkButton from './AddLinkButton';
 import ManageLink from './ManageLink';
 import { capFirstLetter, arrayRemove } from 'core/utils';
+import { CustomLink } from 'types';
 
 interface Props {
   json: any;
@@ -74,7 +75,7 @@ export default function ManageLinks({ json, nftAddress }: Props) {
     // @ts-ignore: Unreachable code error
     let _links = [];
     if (json?.links) {
-      json?.links.map((link) => {
+      json?.links.map((link:CustomLink) => {
         _links.push({
           type: link.type,
           title: link.title,

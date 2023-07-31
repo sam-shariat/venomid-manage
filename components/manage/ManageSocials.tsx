@@ -113,7 +113,7 @@ export default function ManageSocials({ json, nftAddress }: Props) {
                         <ManageSocial
                           icon={<SocialIcon line={useLineIcons} name={item.key} />}
                           title={capFirstLetter(item.key)}
-                          url={item.value}
+                          url={String(item.value)}
                           setUrl={setUrl}
                           ind={index}
                           removeUrl={removeUrl}

@@ -122,8 +122,10 @@ export default function ManageLinks({ json, nftAddress }: Props) {
           <AccordionPanel pb={4} minWidth="100%">
             <Stack gap={2}>
               <SortableCon onSortEnd={onSortEnd} useDragHandle>
+                <>
                 {linksArray.map((item, index) => (
                   <SortableItem key={`item-${item.title}-${index}`} index={index}>
+                    <>
                     <ManageLink
                       key={`item-${item.key}`}
                       icon={<LinkIcon type={item.type} />}
@@ -136,8 +138,10 @@ export default function ManageLinks({ json, nftAddress }: Props) {
                       setUrl={setLinks}
                       removeUrl={removeLink}
                     />
+                    </>
                   </SortableItem>
                 ))}
+                </>
               </SortableCon>
               <AddLinkButton />
             </Stack>

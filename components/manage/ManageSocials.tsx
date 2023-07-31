@@ -104,10 +104,12 @@ export default function ManageSocials({ json, nftAddress }: Props) {
           <AccordionPanel pb={4} minWidth="100%">
             <Stack my={2}>
               <SortableCon onSortEnd={onSortEnd} useDragHandle>
+              <>
                 {socialsArray.map(
                   (item, index) =>
                     item.key && (
                       <SortableItem key={`item-${item.key}`} index={index}>
+                        <>
                         <ManageSocial
                           key={`item-${item.key}`}
                           icon={<SocialIcon line={useLineIcons} name={item.key} />}
@@ -117,9 +119,11 @@ export default function ManageSocials({ json, nftAddress }: Props) {
                           ind={index}
                           removeUrl={removeUrl}
                         />
+                        </>
                       </SortableItem>
                     )
                 )}
+                </>
               </SortableCon>
               <AddSocialButton />
             </Stack>

@@ -98,6 +98,7 @@ export default function Header() {
             {notMobile && (
               <IconButton
                 aria-label="theme"
+                variant="ghost"
                 onClick={()=> {setColorM(colorMode === 'light' ? 'dark' : 'light'); toggleColorMode()} }
                 icon={colorMode === 'light' ? <RiMoonFill /> : <RiSunFill />}
               />

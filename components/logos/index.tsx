@@ -119,6 +119,8 @@ const LinkIcon = ({ type, line }: LinkIconProps) => {
       return line ? <RiPhoneLine size="28" /> : <RiPhoneFill size="28" />;
     case 'whatsapp':
       return line ? <RiWhatsappLine size="28" /> : <RiWhatsappFill size="28" />;
+    default:
+      return <></>
   }
 };
 export { VenomFoundation, BTC, ETH, VenomScanIcon, SocialIcon, LinkIcon, Zealy, Metamask };

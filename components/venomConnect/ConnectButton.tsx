@@ -122,7 +122,7 @@ export default function ConnectButton() {
                     fontSize="14px"
                     my={'0 !important'}>
                     {primaryName?.name !== ''
-                      ? capFirstLetter(primaryName.name)
+                      ? capFirstLetter(String(primaryName.name))
                       : truncAddress(String(address))}
                   </Text>
                   <Text

@@ -13,7 +13,7 @@ const capFirstLetter = (str: string) => {
   return String(final);
 };
 
-const arrayRemove = (arr: Array, index: number) => {
+const arrayRemove = (arr: any, index: number) => {
   return arr.filter((item: any, ind: number) => index !== ind && item);
 };
 

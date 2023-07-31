@@ -71,6 +71,7 @@ export default function ManageLinks({ json, nftAddress }: Props) {
   ));
 
   useEffect(() => {
+    // @ts-ignore: Unreachable code error
     let _links = [];
     if (json?.links) {
       json?.links.map((link) => {

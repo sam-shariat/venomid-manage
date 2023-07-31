@@ -140,7 +140,7 @@ export default function ConnectButton() {
                   color="white"
                   bgColor={'black'}
                   hasArrow>
-                  <IconButton onClick={onCopy} variant="ghost">
+                  <IconButton onClick={onCopy} variant="ghost" aria-label="copy-venom-address">
                     {hasCopied ? <RiCheckDoubleFill size={22} /> : <RiFileCopyLine size={22} />}
                   </IconButton>
                 </Tooltip>
@@ -150,7 +150,7 @@ export default function ConnectButton() {
                   hasArrow
                   color="white"
                   bgColor={'black'}>
-                  <IconButton onClick={disconnect} variant="ghost">
+                  <IconButton onClick={disconnect} variant="ghost" aria-label="disconnect-wallet">
                     <RiLogoutBoxRLine size={22} />
                   </IconButton>
                 </Tooltip>

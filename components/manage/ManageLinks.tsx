@@ -11,7 +11,7 @@ import {
   useMediaQuery,
   useColorMode,
 } from '@chakra-ui/react';
-import React, { useEffect } from 'react';
+import React, { useEffect, ReactNode } from 'react';
 import { useAtom, useAtomValue } from 'jotai';
 import { linksArrayAtom } from 'core/atoms';
 import { LinkIcon } from 'components/logos';
@@ -32,7 +32,7 @@ export default function ManageLinks({ json, nftAddress }: Props) {
   const [notMobile] = useMediaQuery('(min-width: 800px)');
   const { colorMode } = useColorMode();
 
-  const SortableCon = SortableContainer<SortableConProps>(({ children, onSortEnd, useDragHandle }) => {
+  const SortableCon = SortableContainer<SortableConProps>(({ children } : { children: ReactNode } ) => {
     return <ul>{children}</ul>;
   });
 
@@ -66,7 +66,7 @@ export default function ManageLinks({ json, nftAddress }: Props) {
   };
 
   // @ts-ignore: Unreachable code error
-  const SortableItem = SortableElement<SortableItemProps>(({ children, index }) => (
+  const SortableItem = SortableElement<SortableItemProps>(({ children }: { children: ReactNode }) => (
     <li style={{ listStyleType: 'none', padding: '0px 0px', margin: '12px 0px' }}>{children}</li>
   ));
 

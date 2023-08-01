@@ -428,12 +428,13 @@ const ManagePage: NextPage = () => {
                     </Tooltip>
                     <Tooltip
                       borderRadius={4}
-                      aria-label='paste eth address'
+                      
                       label={<Text p={2}>Paste</Text>}
                       hasArrow
                       color="white"
                       bgColor={'black'}>
                       <IconButton
+                      aria-label='paste eth address'
                         onClick={() => navigator.clipboard.readText().then((text) => setEth(text))}>
                         <RiFileCopy2Line />
                       </IconButton>

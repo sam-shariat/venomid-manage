@@ -6,9 +6,8 @@ import 'swagger-ui-react/swagger-ui.css';
 import { SITE_PROFILE_URL, SITE_URL } from 'core/utils/constants';
 import Seo from 'components/Layout/Seo';
 
-const SwaggerUI = dynamic<{
-  spec: any;
-}>(import('swagger-ui-react'), { ssr: false });
+      // @ts-ignore: Unreachable code error
+const SwaggerUI = dynamic<{spec: any;}>(import('swagger-ui-react'), { ssr: false });
 
 function Docs({ spec }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { colorMode } = useColorMode();

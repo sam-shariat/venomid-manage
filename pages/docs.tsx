@@ -6,6 +6,32 @@ import 'swagger-ui-react/swagger-ui.css';
 import { SITE_PROFILE_URL, SITE_URL } from 'core/utils/constants';
 import Seo from 'components/Layout/Seo';
 
+const SwaggerUI = dynamic<{
+  spec: any;
+}>(import('swagger-ui-react'), { ssr: false });
+
+function Docs({ spec }: InferGetStaticPropsType<typeof getStaticProps>) {
+  const { colorMode } = useColorMode();
+
+  return (
+    <Box backgroundColor={colorMode === 'dark' ? 'whiteAlpha.900' : 'auto'}>
+      <Seo title='Venom ID API Docs' description='Anyone, Anywhere can access Venom IDs Data' />
+      <Container
+        as="main"
+        maxW="container.md"
+        display="grid"
+        placeContent="center"
+        placeItems="center"
+        minH="75vh"
+        pb={12}>
+        <Flex width={'100%'}>
+          <SwaggerUI spec={spec} />
+        </Flex>
+      </Container>
+    </Box>
+  );
+}
+
 const exampleOutput = {
   nftData: {
     nftAddress: '0:8e382a1c11a36fe4ffb7150b1674da4842f4f3805b18d5d4bc0d9dca0e5e34be',
@@ -73,32 +99,6 @@ const exampleOutput = {
     lightMode: false,
   },
 };
-
-const SwaggerUI = dynamic<{
-  spec: any;
-}>(import('swagger-ui-react'), { ssr: false });
-
-function Docs({ spec }: InferGetStaticPropsType<typeof getStaticProps>) {
-  const { colorMode } = useColorMode();
-
-  return (
-    <Box backgroundColor={colorMode === 'dark' ? 'whiteAlpha.900' : 'auto'}>
-      <Seo title='Venom ID API Docs' description='Anyone, Anywhere can access Venom IDs Data' />
-      <Container
-        as="main"
-        maxW="container.md"
-        display="grid"
-        placeContent="center"
-        placeItems="center"
-        minH="75vh"
-        pb={12}>
-        <Flex width={'100%'}>
-          <SwaggerUI spec={spec} />
-        </Flex>
-      </Container>
-    </Box>
-  );
-}
 
 export const getStaticProps: GetStaticProps = async () => {
   const spec: Record<string, any> = createSwaggerSpec({

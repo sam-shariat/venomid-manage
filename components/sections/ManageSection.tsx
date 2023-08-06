@@ -27,6 +27,7 @@ import { useAtom, useAtomValue } from 'jotai';
 import { Address, Transaction } from 'everscale-inpage-provider';
 import { Message } from 'types';
 import { AVATAR_API_URL } from 'core/utils/constants';
+import { RiExternalLinkLine } from 'react-icons/ri';
 
 function ManageSection() {
   const { provider } = useVenomProvider();
@@ -191,7 +192,10 @@ function ManageSection() {
               </Center>
             )}
             <MessageAlert message={message} notMobile={notMobile} />
-            <SimpleGrid columns={[1, 1, nftjsons && nftjsons?.length > 1 ? 2 : 1]} gap={4} width={'100%'}>
+            <SimpleGrid
+              columns={[1, 1, nftjsons && nftjsons?.length > 1 ? 2 : 1]}
+              gap={4}
+              width={'100%'}>
               {nftjsons?.map((nft) => (
                 <Center
                   width={'100%'}
@@ -215,31 +219,35 @@ function ManageSection() {
                     alignItems={'center'}
                     justifyContent={'center'}
                     my={2}>
-                    <Text 
-                    fontWeight={'bold'}
-                    fontSize={'2xl'} >{String(nft.name).slice(0,-4).toLowerCase()}</Text>
+                    <Text fontWeight={'bold'} fontSize={'2xl'}>
+                      {String(nft.name).slice(0, -4).toLowerCase()}
+                    </Text>
                     <Box width={100}>
-                    <Avatar url={AVATAR_API_URL + String(nft.name).slice(0,-4).toLowerCase()} />
+                      <Avatar url={AVATAR_API_URL + String(nft.name).slice(0, -4).toLowerCase()} />
                     </Box>
                   </Flex>
                   <Button
-                    disabled={
-                      (nft?.name !== undefined && primaryName.name === nft?.name.slice(0, -4)) ||
-                      isSaving ||
-                      isConfirming
-                    }
                     color="white"
                     bgColor={'var(--venom2)'}
                     isLoading={isSaving || isConfirming}
-                    onClick={() => setAsPrimary(String(nft?.address), String(nft?.name))}
+                    onClick={() =>
+                      nft?.name !== undefined &&
+                      primaryName.name !== nft?.name.slice(0, -4) &&
+                      setAsPrimary(String(nft?.address), String(nft?.name))
+                    }
+                    disabled={
+                      isSaving ||
+                      isConfirming ||
+                      (nft?.name !== undefined && primaryName.name === nft?.name.slice(0, -4))
+                    }
                     minW={320}>
                     {nft?.name !== undefined && primaryName.name === nft?.name.slice(0, -4)
                       ? 'Primary Name'
                       : 'Set As Primary'}
                   </Button>
                   <NextLink href={'manage/' + nft.address} passHref>
-                    <Button color="white" bgColor={'var(--purple2)'} minW={320}>
-                      Manage {nft.name}
+                    <Button variant={'outline'} colorScheme="purple" minW={320}>
+                      Customize {nft.name}
                     </Button>
                   </NextLink>
                   <Link href={nft.external_url} target="_blank">
@@ -251,7 +259,7 @@ function ManageSection() {
               ))}
             </SimpleGrid>
             {listIsEmpty && !isLoading && (
-              <Center display='flex' flexDirection="column" gap={4}>
+              <Center display="flex" flexDirection="column" gap={4}>
                 <Text fontSize="xl">You don't own any Venom IDs</Text>
                 <Button
                   as={Link}
@@ -260,8 +268,10 @@ function ManageSection() {
                   variant="outline"
                   textAlign="left"
                   borderWidth={1}
+                  gap={2}
                   borderColor="grey">
                   Claim Your Venom ID
+                  <RiExternalLinkLine size={'18px'} />
                 </Button>
               </Center>
             )}

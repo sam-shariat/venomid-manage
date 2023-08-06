@@ -1,4 +1,5 @@
 /** @type {import('next').NextConfig} */
+
 const nextConfig = {
   reactStrictMode: true,
   images: {
@@ -9,13 +10,13 @@ const nextConfig = {
         port: '',
         pathname: '/ipfs/**',
       },
-      {
-        protocol: 'http',
-        hostname: 'ipfs.io',
-        port: '',
-        pathname: '/ipfs/**',
-      },
     ],
+  },
+  transpilePackages: ['@eversdk/lib-web'],
+  webpack(config) {
+    config.output.webassemblyModuleFilename = './eversdk.wasm';
+    config.experiments = { asyncWebAssembly: true, layers: true };
+    return config;
   },
 };
 

@@ -2,14 +2,18 @@ import React from 'react'
 import { SITE_DESCRIPTION, SITE_FULL_DESCRIPTION, SITE_TITLE, SITE_URL, SOCIAL_TWITTER, TWITTER_URL } from 'core/utils/constants'
 import { DefaultSeo } from 'next-seo'
 
-export default function Seo() {
+interface Props {
+  title?: string;
+  description?: string;
+}
+export default function Seo({title,description}:Props) {
   const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : SITE_URL;
   return (
     <DefaultSeo
-      title={SITE_TITLE}
+      title={title ? title : SITE_TITLE}
       defaultTitle={SITE_TITLE}
       titleTemplate={`%s | ${SITE_DESCRIPTION}`}
-      description={SITE_FULL_DESCRIPTION}
+      description={description ? description : SITE_FULL_DESCRIPTION}
       canonical={origin}
       themeColor={'#101212'}
       defaultOpenGraphImageWidth={1200}

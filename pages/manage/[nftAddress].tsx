@@ -80,7 +80,7 @@ const ManagePage: NextPage = () => {
   const links = useAtomValue(linksArrayAtom);
   const socials = useAtomValue(socialsArrayAtom);
   const lineIcons = useAtomValue(useLineIconsAtom);
-  const [notMobile] = useMediaQuery('(min-width: 800px)');
+  const [ notMobile ] = useMediaQuery('(min-width: 800px)');
   const { colorMode } = useColorMode();
   const [avatar, setAvatar] = useAtom(avatarAtom);
   const [jsonHash, setJsonHash] = useAtom(jsonHashAtom);

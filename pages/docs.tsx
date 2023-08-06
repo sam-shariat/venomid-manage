@@ -109,6 +109,7 @@ export const getStaticProps: GetStaticProps = async () => {
         description: 'Anyone, Anywhere can access Venom IDs Data',
       },
       servers: [{ url: SITE_URL }, { url: SITE_PROFILE_URL }],
+      host: SITE_URL,
       tags: [
         {
           name: 'Venom ID Name',

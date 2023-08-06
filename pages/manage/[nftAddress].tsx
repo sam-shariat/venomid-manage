@@ -61,7 +61,12 @@ import MessageAlert from 'components/Layout/Message';
 import { useConnect, useVenomProvider } from 'venom-react-hooks';
 import Logo from 'components/Layout/Logo';
 import { RiFileCopy2Line } from 'react-icons/ri';
-import { useAddress, useConnect as useThirdWebConnect, metamaskWallet, useStorageUpload } from '@thirdweb-dev/react';
+import {
+  useAddress,
+  useConnect as useThirdWebConnect,
+  metamaskWallet,
+  useStorageUpload,
+} from '@thirdweb-dev/react';
 
 const metamaskConfig = metamaskWallet();
 
@@ -80,7 +85,7 @@ const ManagePage: NextPage = () => {
   const links = useAtomValue(linksArrayAtom);
   const socials = useAtomValue(socialsArrayAtom);
   const lineIcons = useAtomValue(useLineIconsAtom);
-  const [ notMobile ] = useMediaQuery('(min-width: 800px)');
+  const [notMobile] = useMediaQuery('(min-width: 800px)');
   const { colorMode } = useColorMode();
   const [avatar, setAvatar] = useAtom(avatarAtom);
   const [jsonHash, setJsonHash] = useAtom(jsonHashAtom);
@@ -90,6 +95,7 @@ const ManagePage: NextPage = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isConfirming, setIsConfirming] = useState(false);
+  const [autoEth, setAutoEth] = useState(false);
   const [message, setMessage] = useState<Message>({ type: '', title: '', msg: '', link: '' });
   const minFee = 660000000;
   const router = useRouter();
@@ -144,7 +150,7 @@ const ManagePage: NextPage = () => {
       links: links,
       socials: socialsObj,
       lineIcons: lineIcons,
-      lightMode: lightMode
+      lightMode: lightMode,
     });
 
     console.log(data);
@@ -301,9 +307,13 @@ const ManagePage: NextPage = () => {
     getProfileJson();
   }, [account]);
 
-  // useEffect(()=> {
-  //   setMessage({ type: '', title: '', msg: '', link: '' })
-  // },[changedJson])
+
+  useEffect(()=> {
+    if(autoEth && ethAddressFromWallet){
+      setEth(String(ethAddressFromWallet));
+      setAutoEth(false);
+    };
+  },[autoEth,ethAddressFromWallet])
 
   return (
     <>
@@ -386,7 +396,7 @@ const ManagePage: NextPage = () => {
                       color="white"
                       bgColor={'black'}>
                       <IconButton
-                        aria-label='paste btc address'
+                        aria-label="paste btc address"
                         onClick={() => navigator.clipboard.readText().then((text) => setBtc(text))}>
                         <RiFileCopy2Line />
                       </IconButton>
@@ -409,18 +419,24 @@ const ManagePage: NextPage = () => {
                   <InputRightElement gap={1} width={'92px'}>
                     <Tooltip
                       borderRadius={4}
-                      label={<Text p={2}>{ethAddressFromWallet ? 'Use Connected ETH Address' : 'Connect ETH Wallet'}</Text>}
+                      label={
+                        <Text p={2}>
+                          {ethAddressFromWallet
+                            ? 'Use Connected ETH Address'
+                            : 'Connect ETH Wallet'}
+                        </Text>
+                      }
                       hasArrow
                       color="white"
                       bgColor={'black'}>
                       <IconButton
-                      aria-label='connect eth wallet'
+                        aria-label="connect eth wallet"
                         onClick={async () => {
                           if (ethAddressFromWallet) {
                             setEth(ethAddressFromWallet);
                           } else {
                             await connectWithThirdweb(metamaskConfig);
-                            setEth(String(ethAddressFromWallet));
+                            setAutoEth(true);
                           }
                         }}>
                         <Metamask />
@@ -428,13 +444,12 @@ const ManagePage: NextPage = () => {
                     </Tooltip>
                     <Tooltip
                       borderRadius={4}
-                      
                       label={<Text p={2}>Paste</Text>}
                       hasArrow
                       color="white"
                       bgColor={'black'}>
                       <IconButton
-                      aria-label='paste eth address'
+                        aria-label="paste eth address"
                         onClick={() => navigator.clipboard.readText().then((text) => setEth(text))}>
                         <RiFileCopy2Line />
                       </IconButton>

@@ -101,6 +101,7 @@ export default function Header() {
                 href={SITE_CLAIM_URL}
                 target='_blank'
                 variant="ghost"
+                
                 gap={2}>
                 Claim VID <RiExternalLinkLine size={'18px'} />
               </Button>
@@ -206,6 +207,7 @@ export default function Header() {
                 href={SITE_CLAIM_URL}
                 target='_blank'
                 variant="ghost"
+                justifyContent={'left'}
                 gap={2}>
                 Claim VID <RiExternalLinkLine size={'18px'} />
               </Button>

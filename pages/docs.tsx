@@ -6,15 +6,15 @@ import 'swagger-ui-react/swagger-ui.css';
 import { SITE_PROFILE_URL, SITE_URL } from 'core/utils/constants';
 import Seo from 'components/Layout/Seo';
 
-      // @ts-ignore: Unreachable code error
-const SwaggerUI = dynamic<{spec: any;}>(import('swagger-ui-react'), { ssr: false });
+// @ts-ignore: Unreachable code error
+const SwaggerUI = dynamic<{ spec: any }>(import('swagger-ui-react'), { ssr: false });
 
 function Docs({ spec }: InferGetStaticPropsType<typeof getStaticProps>) {
   const { colorMode } = useColorMode();
 
   return (
     <Box backgroundColor={colorMode === 'dark' ? 'whiteAlpha.900' : 'auto'}>
-      <Seo title='Venom ID API Docs' description='Anyone, Anywhere can access Venom IDs Data' />
+      <Seo title="Venom ID API Docs" description="Anyone, Anywhere can access Venom IDs Data" />
       <Container
         as="main"
         maxW="container.md"
@@ -104,10 +104,12 @@ export const getStaticProps: GetStaticProps = async () => {
     definition: {
       openapi: '3.0.0',
       info: {
-        title: 'Venom ID Restful API',
+        title: 'Venom ID Restful API Docs',
         version: '1.0',
         description: 'Anyone, Anywhere can access Venom IDs Data',
       },
+      servers:[{ url: SITE_URL }, { url: SITE_PROFILE_URL }],
+      schemes:['https'],
       tags: [
         {
           name: 'Venom ID Name',

@@ -4,6 +4,7 @@ const { libNode } = require('@eversdk/lib-node');
 const { Account } = require('@eversdk/appkit');
 const { CollectionContract } = require('abi/CollectionContract');
 const { NftContract } = require('abi/NftContract');
+import axios from 'axios';
 
 let client = null;
 
@@ -22,11 +23,11 @@ async function getClient() {
 
 export default async function handler(req, res) {
   try {
-    console.log(req.query)
-    if(!req.query.name){
-      res.status(202).json({status:'error',message:'name param is required'});
+    console.log(req.query);
+    if (!req.query.name) {
+      res.status(202).json({ status: 'error', message: 'name param is required' });
       process.exit(1);
-    };
+    }
 
     const client = await getClient();
     const keys = await client.crypto.generate_random_sign_keys();
@@ -38,15 +39,31 @@ export default async function handler(req, res) {
     });
 
     let response = await collection.runLocal('getInfoByName', { name: String(req.query.name) });
-    if(response.decoded.output.value0?.owner){
-        res.status(200).json(response.decoded.output.value0?.owner);
+
+    const nft = new Account(NftContract, {
+      signer: signerKeys(keys),
+      client,
+      address: response.decoded.output.value0.nftAddress,
+    });
+
+    let responseJson = await nft.runLocal('getJson', { answerId: 0 });
+    let json = JSON.parse(responseJson.decoded.output.json);
+    let jsonUrl = json.attributes?.find((att) => att.trait_type === 'DATA')?.value;
+
+    //res.status(200).json({json:json,jsonUrl:jsonUrl});
+
+    if (jsonUrl) {
+      const result = await axios.get(String('https://ipfs.io/ipfs/' + jsonUrl));
+      if (result.data.links !== []) {
+        res.status(200).json(result.data.links);
+      } else {
+        res.status(202).json({ status: 'error', message: 'links are not set' });
+      }
     } else {
-      res.status(202).json({ status: 'error', message: 'name does not exist' });
+      res.status(202).json({ status: 'error', message: 'links are not set' });
     }
-    
   } catch (err) {
     console.error(err);
     res.status(202).json({ status: 'error', message: 'name does not exist' });
-      
   }
 }

@@ -28,9 +28,7 @@ export default async function handler(req, res) {
       res.status(202).json({ status: 'error', message: 'name param is required' });
       process.exit(1);
     }
-
-    const withDetails = req.query.withDetails ? true : false;
-
+    
     const client = await getClient();
     const keys = await client.crypto.generate_random_sign_keys();
 
@@ -56,7 +54,11 @@ export default async function handler(req, res) {
 
     if (jsonUrl) {
       const result = await axios.get(String('https://ipfs.io/ipfs/' + jsonUrl));
-      res.status(200).json(result.data.btcAddress);
+      if (result.data.btcAddress !== '') {
+        res.status(200).json(result.data.btcAddress);
+      } else {
+        res.status(202).json({ status: 'error', message: 'btc address is not set' });
+      }
     } else {
       res.status(202).json({ status: 'error', message: 'btc address is not set' });
     }

@@ -12,7 +12,7 @@ export default function Seo({title,description}:Props) {
     <DefaultSeo
       title={title ? title : SITE_TITLE}
       defaultTitle={SITE_TITLE}
-      titleTemplate={`%s | ${SITE_DESCRIPTION}`}
+      titleTemplate={`%s | ${description ? description : SITE_DESCRIPTION}`}
       description={description ? description : SITE_FULL_DESCRIPTION}
       canonical={origin}
       themeColor={'#101212'}

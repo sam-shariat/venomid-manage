@@ -3,7 +3,6 @@ const { TonClient, signerKeys } = require('@eversdk/core');
 const { libNode } = require('@eversdk/lib-node');
 const { Account } = require('@eversdk/appkit');
 const { CollectionContract } = require('abi/CollectionContract');
-const { NftContract } = require('abi/NftContract');
 
 let client = null;
 
@@ -23,8 +22,8 @@ async function getClient() {
 export default async function handler(req, res) {
   try {
     console.log(req.query)
-    if(!req.query.name){
-      res.status(202).json({status:'error',message:'name param is required'});
+    if(!req.query.ownerAddress){
+      res.status(202).json({status:'error',message:'ownerAddress param is required'});
       process.exit(1);
     };
 
@@ -37,16 +36,16 @@ export default async function handler(req, res) {
       address: CONTRACT_ADDRESS,
     });
 
-    let response = await collection.runLocal('getInfoByName', { name: String(req.query.name) });
-    if(response.decoded.output.value0?.owner){
-        res.status(200).json(response.decoded.output.value0?.owner);
+    let response = await collection.runLocal('getPrimaryName', { _owner: String(req.query.ownerAddress) });
+    if(response.decoded.output.value0?.name){
+        res.status(200).json(response.decoded.output.value0?.name);
     } else {
-      res.status(202).json({ status: 'error', message: 'name does not exist' });
+        res.status(202).json({status:'error',message:'owner does not own a venom id'});
     }
     
   } catch (err) {
     console.error(err);
-    res.status(202).json({ status: 'error', message: 'name does not exist' });
+    res.status(202).json({status:'error',message:'owner does not own a venom id'});
       
   }
 }

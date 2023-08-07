@@ -1,6 +1,6 @@
 import { GetStaticProps, InferGetStaticPropsType } from 'next';
 import { createSwaggerSpec } from 'next-swagger-doc';
-import { Container, Flex, Box, useColorMode } from '@chakra-ui/react';
+import { Container, Flex, Box, useColorMode, Stack, Text } from '@chakra-ui/react';
 import dynamic from 'next/dynamic';
 import 'swagger-ui-react/swagger-ui.css';
 import { SITE_PROFILE_URL, SITE_URL } from 'core/utils/constants';
@@ -23,9 +23,29 @@ function Docs({ spec }: InferGetStaticPropsType<typeof getStaticProps>) {
         placeItems="center"
         minH="75vh"
         pb={12}>
-        <Flex width={'100%'}>
-          <SwaggerUI spec={spec} />
-        </Flex>
+        <Stack>
+          <Stack color='var(--dark2)' my={12} gap={4} px={2}>
+          <Text fontSize='4xl' fontWeight={'bold'}>Overview</Text>
+          <Text>Venom ID (VID) is a system that connects easy-to-understand names like 'sam.vid' with technical identifiers like Venom addresses, cryptocurrency addresses, avatars, and data information. VID also has a feature called 'reverse resolution' which allows you to link names with Venom addresses.</Text>
+          <Text fontSize='4xl' fontWeight={'bold'}>Enabling Venom ID in your DApp</Text>
+          <Text>Integrating Venom ID (VID) into your application involves several crucial features that can be implemented independently. While a comprehensive VID integration is ideal, even basic support can greatly benefit users. Below, we present three levels of VID integration. Level 1 is easily achievable and provides significant impact for users, while levels 2 and 3 offer additional functionality, enhancing your dApp's usability and improving users' experience when interacting with it.</Text>
+          <Text fontSize='4xl' fontWeight={'bold'}>Resolving Venom ID names</Text>
+          <Text>The initial step in supporting Venom ID in your application is enabling your application to understand VID names and accept them wherever an address is required. To learn how to accomplish this, use the <strong>/api/name/ownerAddress</strong></Text>
+          <Text>By accepting VID names in your application, you eliminate the need for users to manually copy, paste, or type out lengthy and obscure Venom addresses. This reduces errors and the risk of losing funds.</Text>
+          <Text fontSize='4xl' fontWeight={'bold'}>Support Reverse Resolution</Text>
+          <Text>The second level of VID integration involves displaying VID names wherever your app currently displays addresses.</Text>
+          <Text>If a user enters a VID in your DApp, retain this name and display it whenever you would typically show the address.</Text>
+          <Text>If a user enters an address or the address is obtained from another source, you may still be able to display an associated VID name by using <strong>/api/owner/name</strong>.</Text>
+          <Text>This allows you to find the canonical name for an address and display it when available. If no canonical name is provided, your application can fallback to displaying the address as it did before.</Text>
+          <Text>By supporting reverse resolution, you make it easier for your users to identify the accounts they interact with by associating them with a concise and readable name instead of a long, cryptic Venom address.</Text>
+          <Text fontSize='4xl' fontWeight={'bold'}>API Endpoints</Text>
+          <Text fontWeight={'bold'}>https://venomid.tools/api/</Text>
+          <Text fontWeight={'bold'}>https://venomid.link/api/</Text>
+          </Stack>
+          <Flex width={'100%'}>
+            <SwaggerUI spec={spec} />
+          </Flex>
+        </Stack>
       </Container>
     </Box>
   );
@@ -104,12 +124,10 @@ export const getStaticProps: GetStaticProps = async () => {
     definition: {
       openapi: '3.0.0',
       info: {
-        title: 'Venom ID Restful API Docs',
-        version: '1.0',
-        description: 'Anyone, Anywhere can access Venom IDs Data',
+        title: 'Venom ID Restful API Docs (Beta)',
+        version: '0.0.1',
+        description: 'At the moment, the integration of VID can only be done using the REST API. We are continuously working on updates and will soon release a stable version for seamless integration.',
       },
-      servers:[{ url: SITE_URL }, { url: SITE_PROFILE_URL }],
-      schemes:['https'],
       tags: [
         {
           name: 'Venom ID Name',
@@ -188,6 +206,58 @@ export const getStaticProps: GetStaticProps = async () => {
             },
           },
         },
+        '/api/name/ownerAddress': {
+          summary: 'Get venom address of the required name',
+          get: {
+            summary: 'Get venom address of the required name',
+            tags: ['Venom ID Name'],
+            description:
+              'Use this endpoint to get the venom address of the venom id name owner',
+            parameters: [
+              {
+                in: 'query',
+                name: 'name',
+                description: 'name of the venom id ( example : sam )',
+                required: true,
+                schema: {
+                  type: 'string',
+                  example: 'sam',
+                },
+              }
+            ],
+            responses: {
+              '200': {
+                description: 'string response when venom id exists',
+                content: {
+                  'text/plain': {
+                    schema: {
+                      type: 'string',
+                      example: '0:4bc69a8c3889adee39f6f1e3b2353c86f960c9b835e93397a2015a62a4823765',
+                    },
+                  },
+                },
+              },
+              '202': {
+                description: 'json response when venom id doesn not exist',
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      properties: {
+                        status: { type: 'string', example: 'error' },
+                        message: { type: 'string', example: 'name does not exist' },
+                      },
+                      example: {
+                        status: 'error',
+                        message: 'name does not exist',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
         '/api/owner': {
           summary: 'Get venom id json info and details by owner',
           get: {
@@ -229,6 +299,58 @@ export const getStaticProps: GetStaticProps = async () => {
                         nftJson: { $ref: '#/components/schemas/nftJson' },
                       },
                       example: exampleOutput,
+                    },
+                  },
+                },
+              },
+              '202': {
+                description: 'json response when owner does not own a venom id',
+                content: {
+                  'application/json': {
+                    schema: {
+                      type: 'object',
+                      properties: {
+                        status: { type: 'string', example: 'error' },
+                        message: { type: 'string', example: 'owner does not own a venom id' },
+                      },
+                      example: {
+                        status: 'error',
+                        message: 'owner does not own a venom id',
+                      },
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+        '/api/owner/name': {
+          summary: 'Get venom id name by owner',
+          get: {
+            summary: 'Get the primary name owned by ownerAddress',
+            tags: ['Venom ID Name'],
+            description:
+              'Use this endpoint to get the name string of the primary venom id of the desired venom wallet address using the venom wallet address',
+            parameters: [
+              {
+                in: 'query',
+                name: 'ownerAddress',
+                description: 'venom wallet address of the owner of the venom id',
+                required: true,
+                schema: {
+                  type: 'string',
+                  example: '0:4bc69a8c3889adee39f6f1e3b2353c86f960c9b835e93397a2015a62a4823765',
+                },
+              }
+            ],
+            responses: {
+              '200': {
+                description: 'response when wallet owns a venom id',
+                content: {
+                  'plain/text': {
+                    schema: {
+                      type: 'string',
+                      example: 'sam',
                     },
                   },
                 },

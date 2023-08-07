@@ -29,8 +29,6 @@ export default async function handler(req, res) {
       process.exit(1);
     }
 
-    const withDetails = req.query.withDetails ? true : false;
-
     const client = await getClient();
     const keys = await client.crypto.generate_random_sign_keys();
 

@@ -292,7 +292,7 @@ const ManagePage: NextPage = () => {
           const res = await axios.get('https://ipfs.io/ipfs/' + ipfsData);
           setJson(res.data);
           console.log(res.data);
-          setName(res.data.name);
+          setName(String(nftJson.name));
           setBio(res.data.bio);
           setBtc(res.data.btcAddress);
           setEth(res.data.ethAddress);
@@ -384,7 +384,7 @@ const ManagePage: NextPage = () => {
                     </Flex>
                   </InputLeftAddon>
                   <Input
-                    placeholder={'Enter Your BTC Address'}
+                    placeholder={'Paste Your BTC Address'}
                     value={json ? btc : 'Loading'}
                     onChange={(e) => setBtc(e.currentTarget.value)}
                   />
@@ -411,7 +411,7 @@ const ManagePage: NextPage = () => {
                     </Flex>
                   </InputLeftAddon>
                   <Input
-                    placeholder={'Enter Your ETH Address'}
+                    placeholder={'Paste Your ETH Address'}
                     value={json ? eth : 'Loading'}
                     onChange={(e) => setEth(e.currentTarget.value)}
                     pr={'92px'}
@@ -471,8 +471,8 @@ const ManagePage: NextPage = () => {
               <Textarea
                 minWidth="xs"
                 my={4}
-                rows={5}
-                maxLength={500}
+                rows={3}
+                maxLength={150}
                 placeholder={"I'm Sam. Blockchain Developer ..."}
                 size="lg"
                 bg={colorMode === 'dark' ? 'whiteAlpha.100' : 'blackAlpha.100'}

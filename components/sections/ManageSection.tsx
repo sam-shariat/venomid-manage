@@ -223,7 +223,7 @@ function ManageSection() {
                       {String(nft.name).slice(0, -4).toLowerCase()}
                     </Text>
                     <Box width={100}>
-                      <Avatar url={AVATAR_API_URL + String(nft.name).slice(0, -4).toLowerCase()} />
+                      <Avatar url={AVATAR_API_URL + String(nft.name).slice(0, -4).toLowerCase() + '&var=' + Math.round(Math.random() * 10000)} />
                     </Box>
                   </Flex>
                   <Button

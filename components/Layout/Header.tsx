@@ -61,14 +61,14 @@ export default function Header() {
       backgroundColor={useColorModeValue('blackAlpha.100', 'blackAlpha.500')}
       borderBottomColor={useColorModeValue('blackAlpha.100', 'whiteAlpha.100')}
       py={2}>
-      <Container maxW="container.lg">
+      <Container maxW="container.xl">
         <Flex justifyContent="space-between">
           <HStack>
-            {!notMobile && (
+            {/* {!notMobile && (
               <IconButton aria-label="venomid-mobile-menu" variant="ghost" onClick={onOpen}>
                 <RiMenu2Fill />
               </IconButton>
-            )}
+            )} */}
             <NextLink href="/" passHref>
               <Button
                 id="venomidmanagelogo"
@@ -81,7 +81,7 @@ export default function Header() {
                 <Text>{notMobile ? 'VenomID' : 'VID'}.Tools</Text>
               </Button>
             </NextLink>
-            {notMobile && (
+            {/* {notMobile && (
               <NextLink href="/" passHref>
                 <Button variant="ghost" textAlign="left">
                   Manage
@@ -105,7 +105,7 @@ export default function Header() {
                 gap={2}>
                 Claim VID <RiExternalLinkLine size={'18px'} />
               </Button>
-            )}
+            )} */}
 
             {/* 
             {notMobile && (
@@ -124,7 +124,7 @@ export default function Header() {
             )} */}
           </HStack>
           <HStack dir="ltr">
-            {notMobile && isConnected && nftAddress.length > 32 && (
+            {/* {notMobile && isConnected && nftAddress.length > 32 && (
               <ConnectWallet
                 theme={colorMode}
                 btnTitle="ETH Wallet"
@@ -135,8 +135,8 @@ export default function Header() {
                 }}
               />
             )}
-            <ConnectButton />
-            {notMobile && (
+            <ConnectButton /> */}
+            
               <IconButton
                 aria-label="theme"
                 variant="ghost"
@@ -146,7 +146,7 @@ export default function Header() {
                 }}
                 icon={colorMode === 'light' ? <RiMoonFill /> : <RiSunFill />}
               />
-            )}
+            
           </HStack>
         </Flex>
       </Container>
@@ -181,7 +181,7 @@ export default function Header() {
           </DrawerHeader>
           <DrawerBody>
             <Stack gap={2} pt={4}>
-              {isConnected && nftAddress.length > 32 && (
+              {/* {isConnected && nftAddress.length > 32 && (
                 <ConnectWallet
                   theme={colorMode}
                   btnTitle="ETH Wallet"
@@ -191,8 +191,8 @@ export default function Header() {
                     border: '1px solid gray',
                   }}
                 />
-              )}
-              <NextLink href="/" passHref>
+              )} */}
+              {/* <NextLink href="/" passHref>
                 <Button variant="ghost" width="100%" justifyContent="left">
                   Manage
                 </Button>
@@ -210,7 +210,7 @@ export default function Header() {
                 justifyContent={'left'}
                 gap={2}>
                 Claim VID <RiExternalLinkLine size={'18px'} />
-              </Button>
+              </Button> */}
 
               {/* 
               <NextLink href="https://venomid.network/#roadmap" passHref>

@@ -3,6 +3,7 @@ import Head from 'next/head';
 import ManageSection from 'components/sections/ManageSection';
 import Seo from 'components/Layout/Seo'
 import { SITE_DESCRIPTION, SITE_URL, SITE_TITLE } from 'core/utils/constants';
+import UpdatingSection from 'components/sections/UpdatingSection';
 
 const Home: NextPage = () => {
   const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : SITE_URL;
@@ -18,7 +19,8 @@ const Home: NextPage = () => {
       </Head>
       
       {/* <ClaimSection /> */}
-      <ManageSection />
+      {/* <ManageSection /> */}
+      <UpdatingSection />
     </>
   );
 };

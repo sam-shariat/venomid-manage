@@ -2,6 +2,7 @@ import {
   Box,
   Button,
   Container,
+  Center,
   Flex,
   HStack,
   Stack,
@@ -9,6 +10,10 @@ import {
   IconButton,
   useColorMode,
   useColorModeValue,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
   useMediaQuery,
   Text,
   DrawerOverlay,
@@ -17,216 +22,284 @@ import {
   DrawerBody,
   useDisclosure,
   Link,
+  Popover,
+  PopoverTrigger,
+  Portal,
+  PopoverContent,
+  PopoverArrow,
+  PopoverHeader,
+  PopoverCloseButton,
+  PopoverBody,
+  PopoverFooter,
+  SimpleGrid,
 } from '@chakra-ui/react';
 import NextLink from 'next/link';
-import { colorModeAtom, localeAtom } from 'core/atoms';
+import { localeAtom, colorModeAtom, isConnectedAtom } from 'core/atoms';
 import { ConnectButton } from 'components/venomConnect';
 import { useAtom, useAtomValue } from 'jotai';
-import Logo from './Logo';
-import {
-  RiMoonFill,
-  RiSunFill,
-  RiMenu2Fill,
-  RiCloseFill,
-  RiExternalLinkLine,
-} from 'react-icons/ri';
+import { RiMoonFill, RiSunFill, RiMenu2Fill, RiCloseFill } from 'react-icons/ri';
 import { Locale } from 'translations';
-import { useEffect } from 'react';
-import { ConnectWallet } from '@thirdweb-dev/react';
-import { useConnect } from 'venom-react-hooks';
 import { useRouter } from 'next/router';
-import { SITE_CLAIM_URL } from 'core/utils/constants';
-
+import { useEffect } from 'react';
+import { useTranslate } from 'core/lib/hooks/use-translate';
+import { LinkIcon, Logo, VenomFoundation } from 'components/logos';
+import Footer from './Footer';
+import LogoLink from './LogoLink';
+import { DOCS_URL, GRINDING_URL, GUIDES_URL, ROADMAP_URL, SITE_URL } from 'core/utils/constants';
+import { motion } from 'framer-motion';
+import ImageBox from 'components/claiming/ImageBox';
 export default function Header() {
   const [colorM, setColorM] = useAtom(colorModeAtom);
   const { colorMode, toggleColorMode } = useColorMode();
-  const { isConnected } = useConnect();
-  const router = useRouter();
-  const nftAddress = String(router.query.nftAddress);
-  const [locale, setLocale] = useAtom(localeAtom);
-  const [notMobile] = useMediaQuery('(min-width: 800px)');
-  const { isOpen, onOpen, onClose } = useDisclosure();
+  const lightMode = useColorMode().colorMode === 'light';
+  const [notMobile] = useMediaQuery('(min-width: 992px)');
+  const [small] = useMediaQuery('(min-width: 420px)');
+  const { isOpen, onOpen, onClose, onToggle } = useDisclosure();
+  const { pathname } = useRouter();
+  const home = pathname === '/' ? true : false;
+  const { t } = useTranslate();
+  const isConnected = useAtomValue(isConnectedAtom);
+  const dashboard = pathname === '/manage' ? true : false;
 
   useEffect(() => {
-    console.log(colorMode + ' is ' + colorM);
-    if (colorMode !== colorM) {
-      toggleColorMode();
+    if (!pathname.includes('nftAddress')) {
+      if (colorMode !== colorM) {
+        toggleColorMode();
+      }
     }
-  }, [colorMode]);
+  }, [colorM, colorMode]);
 
   return (
-    <Box
-      as="nav"
-      borderBottom="1px"
-      backgroundColor={useColorModeValue('blackAlpha.100', 'blackAlpha.500')}
-      borderBottomColor={useColorModeValue('blackAlpha.100', 'whiteAlpha.100')}
-      py={2}>
-      <Container maxW="container.xl">
-        <Flex justifyContent="space-between">
-          <HStack>
-            {/* {!notMobile && (
-              <IconButton aria-label="venomid-mobile-menu" variant="ghost" onClick={onOpen}>
-                <RiMenu2Fill />
-              </IconButton>
-            )} */}
-            <NextLink href="/" passHref>
-              <Button
-                id="venomidmanagelogo"
-                color="var(--venom1)"
-                fontWeight="bold"
-                variant="ghost"
-                gap={2}
-                px={2}>
-                <Logo />
-                <Text>{notMobile ? 'VenomID' : 'VID'}.Tools</Text>
-              </Button>
-            </NextLink>
-            {/* {notMobile && (
-              <NextLink href="/" passHref>
-                <Button variant="ghost" textAlign="left">
-                  Manage
-                </Button>
-              </NextLink>
-            )}
-            {notMobile && (
-              <NextLink href="/docs" passHref>
-                <Button variant="ghost" textAlign="left">
-                  API Docs
-                </Button>
-              </NextLink>
-            )}
-            {notMobile && (
-              <Button
-                as={Link}
-                href={SITE_CLAIM_URL}
-                target='_blank'
-                variant="ghost"
-                
-                gap={2}>
-                Claim VID <RiExternalLinkLine size={'18px'} />
-              </Button>
-            )} */}
+    <>
+      
+      <Box
+        as="nav"
+        position={home ? 'absolute': 'relative'}
+        top={['0px']}
+        zIndex={1000}
+        px={0}
+        m={0}
+        width={'100%'}
+        placeItems={'center'}
 
-            {/* 
-            {notMobile && (
-              <NextLink href="https://venomid.network/#roadmap" passHref>
-                <Button variant="ghost" textAlign="left">
-                  RoadMap
-                </Button>
-              </NextLink>
-            )}
-            {notMobile && (
-              <NextLink href="https://venomid.network/#about" passHref>
-                <Button variant="ghost" textAlign="left">
-                  About
-                </Button>
-              </NextLink>
-            )} */}
-          </HStack>
-          <HStack dir="ltr">
-            {/* {notMobile && isConnected && nftAddress.length > 32 && (
-              <ConnectWallet
-                theme={colorMode}
-                btnTitle="ETH Wallet"
-                style={{
-                  backgroundColor: colorMode === 'light' ? 'var(--light)' : 'var(--dark)',
-                  color: colorMode === 'dark' ? 'white' : 'black',
-                  border: '1px solid gray',
-                }}
-              />
-            )}
-            <ConnectButton /> */}
-            
-              <IconButton
-                aria-label="theme"
-                variant="ghost"
-                onClick={() => {
-                  setColorM(colorMode === 'light' ? 'dark' : 'light');
-                  toggleColorMode();
-                }}
-                icon={colorMode === 'light' ? <RiMoonFill /> : <RiSunFill />}
-              />
-            
-          </HStack>
-        </Flex>
-      </Container>
-      <Drawer placement={'left'} onClose={onClose} isOpen={isOpen}>
-        <DrawerOverlay />
-        <DrawerContent backgroundColor={colorMode === 'light' ? 'var(--white)' : 'var(--dark)'}>
-          <DrawerHeader
-            display="flex"
-            borderBottomWidth="1px"
-            gap={4}
-            justifyContent="space-between">
-            <NextLink href="/" passHref>
-              <Button color="var(--venom1)" fontWeight="bold" variant="ghost" px={1}>
-                <Logo />
-                <Text pl={1}>VenomID.Tools</Text>
-              </Button>
-            </NextLink>
-            <HStack>
-              <IconButton
-                variant="ghost"
-                aria-label="theme"
-                onClick={() => {
-                  setColorM(colorMode === 'light' ? 'dark' : 'light');
-                  toggleColorMode();
-                }}
-                icon={colorMode === 'light' ? <RiMoonFill /> : <RiSunFill />}
-              />
-              <IconButton aria-label="closemenu" variant="ghost" onClick={onClose}>
-                <RiCloseFill />
-              </IconButton>
-            </HStack>
-          </DrawerHeader>
-          <DrawerBody>
-            <Stack gap={2} pt={4}>
-              {/* {isConnected && nftAddress.length > 32 && (
-                <ConnectWallet
-                  theme={colorMode}
-                  btnTitle="ETH Wallet"
-                  style={{
-                    backgroundColor: colorMode === 'light' ? 'var(--light)' : 'var(--dark)',
-                    color: colorMode === 'dark' ? 'white' : 'black',
-                    border: '1px solid gray',
+        // backgroundColor={colorMode === 'dark' ? 'blackAlpha.200' : 'auto'}
+        // backdropFilter="auto"
+        // backdropBlur={'8px'}
+        // backgroundColor={useColorModeValue('whiteAlpha.700', 'blackAlpha.700')}
+        // borderBottomColor={useColorModeValue('blackAlpha.100', 'whiteAlpha.100')}
+      >
+        <Container maxW="100%" p={[3, 4, 4, 4, 8]}>
+          <Flex justifyContent="space-between">
+            <LogoLink />
+            {/*<HStack gap={1}>
+              
+              {notMobile && (
+                <NextLink href={home ? '#w&w' : '/#w&w'} passHref>
+                  <Button variant="ghost" color="default">
+                    {t('w&w')}
+                  </Button>
+                </NextLink>
+              )}
+
+              {notMobile && (
+                <NextLink href={home ? '#ns' : '/#ns'} passHref>
+                  <Button variant="ghost">{t('naming')}</Button>
+                </NextLink>
+              )}
+              {notMobile && (
+                <NextLink href={'/litepaper'} passHref>
+                  <Button variant="ghost">{t('litepaper')}</Button>
+                </NextLink>
+              )}
+
+              {notMobile && (
+                <NextLink href="/community" passHref>
+                  <Button variant="ghost">{t('community')}</Button>
+                </NextLink>
+              )} 
+            </HStack>*/}
+            <HStack dir="ltr">
+              
+              {isConnected && (
+                <NextLink href="/send" passHref>
+                  <Button variant="ghost" rounded={'full'} gap={2} isActive={dashboard} size={['md','md','lg']}>
+                    <LinkIcon
+                      type="RiSendPlane2Line"
+                      size={24}
+                      color={dashboard ? 'var(--venom1)' : 'inherit'}
+                    />
+                    {notMobile && (
+                      <Text color={dashboard ? 'var(--venom1)' : 'default'}>{t('Send')}</Text>
+                    )}
+                  </Button>
+                </NextLink>
+              )}
+
+              <Popover onClose={onClose} isOpen={isOpen} onOpen={onOpen}>
+                <PopoverTrigger>
+                  <IconButton
+                    aria-label="venomid-mobile-menu"
+                    variant="ghost"
+                    mx={0}
+                    rounded={'full'}
+                    size={['md', 'lg']}>
+                    <LinkIcon type="RiMenuLine" size={22} />
+                  </IconButton>
+                </PopoverTrigger>
+                <Portal>
+                  <PopoverContent
+                    rounded={'2xl'}
+                    zIndex={10000}
+                    mt={2}
+                    bg={lightMode ? 'var(--white)' : 'var(--dark)'}>
+                    <PopoverHeader
+                      justifyContent={'space-between'}
+                      display={'flex'}
+                      alignItems={'center'}
+                      p={4}
+                      px={6}>
+                      <Flex gap={3}>
+                        <VenomFoundation />
+                        <Text fontWeight={'bold'} cursor={'default'}>
+                          Venom Mainnet
+                        </Text>
+                      </Flex>
+                      <IconButton
+                        variant="ghost"
+                        aria-label="theme"
+                        onClick={() => {
+                          setColorM(lightMode ? 'dark' : 'light');
+                          toggleColorMode();
+                        }}
+                        icon={lightMode ? <RiMoonFill /> : <RiSunFill />}
+                      />
+                    </PopoverHeader>
+                    <PopoverBody>
+                      <SimpleGrid columns={2} py={2} gap={2}>
+                        {/*<NextLink href={'/what'} passHref>
+                          <Button
+                            variant="ghost"
+                            colorScheme={pathname === '/what' ? 'green' : 'gray'}
+                            onClick={onClose}
+                            width="100%"
+                            justifyContent="left">
+                            {t('What & Why')}
+                          </Button>
+                        </NextLink>
+                        <NextLink href={'/usecase'} passHref>
+                          <Button
+                            onClick={onClose}
+                            variant="ghost"
+                            colorScheme={pathname === '/usecase' ? 'green' : 'gray'}
+                            width="100%"
+                            justifyContent="left">
+                            {t('Use Case')}
+                          </Button>
+                        </NextLink>
+                         <NextLink href={'/community'} passHref>
+                          <Button
+                            onClick={onClose}
+                            variant="ghost"
+                            colorScheme={pathname === '/community' ? 'green' : 'gray'}
+                            width="100%"
+                            justifyContent="left">
+                            {t('Community')}
+                          </Button>
+                        </NextLink>
+                        <NextLink href={'/litepaper'} passHref>
+                          <Button
+                            onClick={onClose}
+                            variant="ghost"
+                            colorScheme={pathname === '/litepaper' ? 'green' : 'gray'}
+                            width="100%"
+                            justifyContent="left">
+                            {t('Litepaper')}
+                          </Button>
+                        </NextLink>
+
+                        <NextLink href={'/ecosystem'} passHref>
+                        
+                          <Button variant="ghost" width="100%" onClick={onClose} colorScheme={pathname === '/ecosystem' ? 'green' : 'gray'} justifyContent="left">
+                            {t('Ecosystem')}
+                          </Button>
+                        </NextLink>
+
+                        <Link href={ROADMAP_URL} target="_blank">
+                          <Button variant="ghost" width="100%" justifyContent="left">
+                            {t('RoadMap')}
+                          </Button>
+                        </Link> */}
+                        <Link href={SITE_URL} target="_blank">
+                          <Button variant="ghost" width="100%" justifyContent="left">
+                            {t('Get Domain')}
+                          </Button>
+                        </Link>
+                        <Link href={GUIDES_URL} target="_blank">
+                          <Button variant="ghost" width="100%" justifyContent="left">
+                            {t('Guides')}
+                          </Button>
+                        </Link>
+                        
+
+                        {/* <NextLink href={'/terms'} passHref>
+                          <Button
+                            onClick={onClose}
+                            variant="ghost"
+                            colorScheme={pathname === '/terms' ? 'green' : 'gray'}
+                            width="100%"
+                            justifyContent="left">
+                            {t('Terms of Use')}
+                          </Button>
+                        </NextLink>
+                        <NextLink href={'/privacy'} passHref>
+                          <Button
+                            onClick={onClose}
+                            variant="ghost"
+                            colorScheme={pathname === '/privacy' ? 'green' : 'gray'}
+                            width="100%"
+                            justifyContent="left">
+                            {t('Privacy Policy')}
+                          </Button>
+                        </NextLink> */}
+                      </SimpleGrid>
+                    </PopoverBody>
+                    <PopoverFooter>
+                      <Footer />
+                    </PopoverFooter>
+                  </PopoverContent>
+                </Portal>
+              </Popover>
+
+              <ConnectButton />
+              {/* {notMobile && (
+                <Menu>
+                  <MenuButton as={Button}>{locale.toUpperCase()}</MenuButton>
+                  <MenuList
+                    py={0}
+                    width={100}
+                    border={1}
+                    borderColor={'grey'}
+                    bg={lightMode ? 'var(--lightGrey)' : 'var(--darkGradient)'}>
+                    <MenuItem onClick={() => setLocale(Locale.En)}>EN</MenuItem>
+                    <MenuItem onClick={() => setLocale(Locale.Fa)}>فا</MenuItem>
+                  </MenuList>
+                </Menu>
+              )} */}
+              {/* {notMobile && (
+                <IconButton
+                  rounded={'full'}
+                  aria-label="theme"
+                  onClick={() => {
+                    setColorM(lightMode ? 'dark' : 'light');
+                    toggleColorMode();
                   }}
+                  icon={lightMode ? <RiMoonFill /> : <RiSunFill />}
                 />
               )} */}
-              {/* <NextLink href="/" passHref>
-                <Button variant="ghost" width="100%" justifyContent="left">
-                  Manage
-                </Button>
-              </NextLink>
-              <NextLink href="/docs" passHref>
-                <Button variant="ghost" width="100%" justifyContent="left">
-                  API Docs
-                </Button>
-              </NextLink>
-              <Button
-                as={Link}
-                href={SITE_CLAIM_URL}
-                target='_blank'
-                variant="ghost"
-                justifyContent={'left'}
-                gap={2}>
-                Claim VID <RiExternalLinkLine size={'18px'} />
-              </Button> */}
-
-              {/* 
-              <NextLink href="https://venomid.network/#roadmap" passHref>
-                <Button variant="ghost" width="100%" justifyContent="left">
-                  RoadMap
-                </Button>
-              </NextLink>
-              <NextLink href="https://venomid.network/#about" passHref>
-                <Button variant="ghost" width="100%" justifyContent="left">
-                  About
-                </Button>
-              </NextLink> */}
-            </Stack>
-          </DrawerBody>
-        </DrawerContent>
-      </Drawer>
-    </Box>
+            </HStack>
+          </Flex>
+        </Container>
+      </Box>
+    </>
   );
 }

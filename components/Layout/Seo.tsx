@@ -1,38 +1,53 @@
-import React from 'react'
-import { SITE_DESCRIPTION, SITE_FULL_DESCRIPTION, SITE_TITLE, SITE_URL, SOCIAL_TWITTER, TWITTER_URL } from 'core/utils/constants'
-import { DefaultSeo } from 'next-seo'
+import React from 'react';
+import {
+  SITE_DESCRIPTION,
+  SITE_FULL_DESCRIPTION,
+  SITE_TITLE,
+  SITE_URL,
+  SOCIAL_TWITTER,
+} from 'core/utils/constants';
+import { DefaultSeo } from 'next-seo';
 
 interface Props {
   title?: string;
   description?: string;
 }
-export default function Seo({title,description}:Props) {
-  const origin = typeof window !== 'undefined' && window.location.origin ? window.location.origin : SITE_URL;
+
+export function Seo({title = SITE_TITLE,description = SITE_DESCRIPTION}: Props) {
+  const origin = SITE_URL;
   return (
     <DefaultSeo
-      title={title ? title : SITE_TITLE}
-      defaultTitle={SITE_TITLE}
-      titleTemplate={`%s | ${description ? description : SITE_DESCRIPTION}`}
-      description={description ? description : SITE_FULL_DESCRIPTION}
+      title={title}
+      defaultTitle={title}
+      titleTemplate={`%s | ${description}`}
+      description={SITE_FULL_DESCRIPTION}
       canonical={origin}
       themeColor={'#101212'}
-      defaultOpenGraphImageWidth={1200}
-      defaultOpenGraphImageHeight={550}
+      defaultOpenGraphImageWidth={512}
+      defaultOpenGraphImageHeight={512}
       openGraph={{
         type: 'website',
         siteName: SITE_TITLE,
         url: origin,
+        description: SITE_FULL_DESCRIPTION,
+        defaultImageHeight: 512,
+        defaultImageWidth: 512,
+        title: SITE_TITLE,
         images: [
           {
-            url: `${origin}/vidorigin.png`,
+            url: `${SITE_URL}logos/vid.png`,
             alt: `${SITE_TITLE} Open Graph Image`,
-          },
-        ],
+            width: 512,
+            height: 512,
+            secureUrl: SITE_URL + 'logos/vid.png',
+            type: 'image/png'
+          }
+        ]
       }}
       twitter={{
         handle: `@${SOCIAL_TWITTER}`,
         site: `@${SOCIAL_TWITTER}`,
-        cardType: 'summary_large_image',
+        cardType: 'summary',
       }}
       additionalLinkTags={[
         {
@@ -42,13 +57,13 @@ export default function Seo({title,description}:Props) {
         {
           rel: 'apple-touch-icon',
           href: `/logos/vidicon.png`,
-          sizes: '76x76'
+          sizes: '76x76',
         },
         {
           rel: 'manifest',
-          href: '/manifest.json'
+          href: '/manifest.json',
         },
       ]}
     />
-  )
+  );
 }

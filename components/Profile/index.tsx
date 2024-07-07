@@ -1,6 +1,10 @@
 import Avatar from './Avatar';
-import Link from './Link';
-import Socials from './Socials';
 import ImageLink from './ImageLink';
+import Link from './Link';
+import Links from './Links';
+import SocialLink from './SocialLink';
+import Socials from './Socials';
+import ProfileSkeleton from './ProfileSkeleton';
+import Wallets from './Wallets';
 
-export { Avatar, Link, Socials, ImageLink }
+export { ImageLink, Avatar, Link, Socials , ProfileSkeleton, Links, SocialLink, Wallets}

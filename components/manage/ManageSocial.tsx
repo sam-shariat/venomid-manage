@@ -22,6 +22,8 @@ import { SortableHandle } from 'react-sortable-hoc';
 import { MdOutlineDragIndicator } from 'react-icons/md';
 import { RiFileCopy2Line } from 'react-icons/ri';
 import React, { useEffect, useState } from 'react';
+import { EXAMPLE_SOCIAL_URLS } from 'core/utils/constants';
+import { capFirstLetter } from 'core/utils';
 
 const DragHandle = SortableHandle(() => (
   <span>
@@ -48,18 +50,18 @@ export default function ManageSocial({ title, icon, url, setUrl, removeUrl, ind 
         allowToggle
         allowMultiple={false}
         borderRadius={10}
-        minWidth={notMobile ? 'md' : 'xs'}
+        minWidth={'100%'}
         size="lg"
         backgroundColor={colorMode === 'dark' ? 'whiteAlpha.100' : 'blackAlpha.100'}
         display={'flex'}
         flexGrow={1}>
         <AccordionItem border={0} borderRadius={10} width={'100%'}>
-          <AccordionButton minWidth={notMobile ? 'md' : 'xs'}>
+          <AccordionButton minWidth={'100%'} as={Button} size='lg' _expanded={{bgColor: 'blackAlpha.50'}}>
             <Flex
               gap={2}
               alignItems={'center'}
               textAlign="left"
-              width={notMobile ? '100%' : '100%'}>
+              width={'100%'}>
               <DragHandle />
               {icon}
               <Text fontWeight={'bold'} display={'flex'} flex={1}>
@@ -71,7 +73,7 @@ export default function ManageSocial({ title, icon, url, setUrl, removeUrl, ind 
 
           <AccordionPanel pb={4} minWidth="100%">
             <Stack gap={2}>
-              <InputGroup mt={2}>
+              <InputGroup my={2}>
                 <Input
                   size="lg"
                   value={txt}
@@ -96,12 +98,15 @@ export default function ManageSocial({ title, icon, url, setUrl, removeUrl, ind 
                   </Tooltip>
                 </InputRightElement>
               </InputGroup>
-
+              <Box py={2}>
+              <Text >Example {capFirstLetter(title)} Link</Text>
+              <Text color={'gray'}>{EXAMPLE_SOCIAL_URLS[title.toLowerCase().replace(' ','')]}</Text>
+              </Box>
               <Flex gap={2} width={'100%'}>
                 <Button
                   color="white"
                   bgColor="var(--venom1)"
-                  disabled={txt === url}
+                  isDisabled={txt === url}
                   onClick={() => setUrl(title.toLowerCase(), txt)}>
                   Save
                 </Button>

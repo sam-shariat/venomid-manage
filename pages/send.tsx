@@ -1,9 +1,7 @@
 import type { NextPage } from 'next';
 import Head from 'next/head';
-import ManageSection from 'components/sections/ManageSection';
 import { SITE_DESCRIPTION, SITE_URL, SITE_TITLE } from 'core/utils/constants';
 import { Seo } from 'components/Layout/Seo';
-import ToolsSection from 'components/sections/ToolsSection';
 import SendSection from 'components/sections/SendSection';
 
 const Send: NextPage = () => {

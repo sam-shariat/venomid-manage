@@ -30,11 +30,6 @@ import { connectedAccountAtom, primaryNameAtom } from 'core/atoms';
 import { useStorageUpload } from '@thirdweb-dev/react';
 import { LinkIcon } from 'components/logos';
 import { DISCORD_URL, SITE_URL, YLIDE_URL, ZEALY_URL } from 'core/utils/constants';
-import WaitlistMail from 'components/mail/Waitlist';
-import ImageBox from 'components/claiming/ImageBox';
-import EarlyAdopters from 'components/early/EarlyAdopters';
-import ContributionSection from 'components/contribution/ContributionSection';
-import MintNft from 'components/early/MintNft';
 import NextLink from 'next/link';
 import ChallengesSection from 'components/challenges/ChallengesSection';
 

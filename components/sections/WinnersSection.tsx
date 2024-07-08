@@ -74,16 +74,6 @@ import {
   VENOMSCAN_NFT,
   VENOMSCAN_TX,
 } from 'core/utils/constants';
-import {
-  motion,
-  motionValue,
-  useAnimationFrame,
-  useMotionValue,
-  useScroll,
-  useSpring,
-  useTransform,
-  useVelocity,
-} from 'framer-motion';
 import DomainAbi from 'abi/Domain.abi.json';
 import { LinkIcon, Logo, LogoIcon } from 'components/logos';
 import { wrap } from '@motionone/utils';

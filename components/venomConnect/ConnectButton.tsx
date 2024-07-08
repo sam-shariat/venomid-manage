@@ -507,7 +507,7 @@ export default function ConnectButton() {
                   primaryName?.nftAddress &&
                   primaryName?.nftAddress?.toString().length > 60 && (
                     <LinkBox px={5}>
-                      <Link href={'manage/' + primaryName?.nftAddress?.toString()} passHref>
+                      <Link href={SITE_URL + 'manage/' + primaryName?.nftAddress?.toString()} passHref>
                       
                         <Button
                           borderColor={'gray.800'}
@@ -522,7 +522,7 @@ export default function ConnectButton() {
                       </Link>
                     </LinkBox>
                   )}
-                {isConnected && (
+                {/* {isConnected && (
                   <LinkBox px={5}>
                     <Link href={'/settings'} passHref>
                       <Button
@@ -536,7 +536,7 @@ export default function ConnectButton() {
                       </Button>
                     </Link>
                   </LinkBox>
-                )}
+                )} */}
 
                 {/* <MenuDivider />
                 <Box px={5}>

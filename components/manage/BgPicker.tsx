@@ -16,7 +16,7 @@ import { useAtom, useAtomValue, useSetAtom } from 'jotai';
 import { bgColorAtom, lightModeAtom } from 'core/atoms';
 import { RiCheckLine } from 'react-icons/ri';
 import { BG_COLORS } from 'core/utils/constants';
-import ColorPicker from 'react-best-gradient-color-picker';
+//import ColorPicker from 'react-best-gradient-color-picker';
 
 export default function BgPicker() {
   const [bgColor, setBgColor] = useAtom(bgColorAtom);

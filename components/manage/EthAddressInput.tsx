@@ -41,6 +41,7 @@ export default function EthAddressInput() {
     <ConnectWallet
       theme={colorMode}
       btnTitle="Connect EVM Wallet"
+      
       auth={{ loginOptional: false, onLogin: (t:string)=> login(t) }}
       style={{
         backgroundColor: colorMode === 'light' ? 'var(--white)' : 'var(--dark)',
@@ -52,15 +53,15 @@ export default function EthAddressInput() {
         minWidth: '100%',
         position: 'relative',
       }}
-      welcomeScreen={{
-        img: {
-          src: `${SITE_URL}/logos/vidicon.png`,
-          width: 150,
-          height: 150,
-        },
-        title: 'One Link To Showcase All Your Assets',
-      }}
-      modalSize={notMobile ? 'wide' : 'compact'}
+      // welcomeScreen={{
+      //   img: {
+      //     src: `${SITE_URL}/logos/vidicon.png`,
+      //     width: 150,
+      //     height: 150,
+      //   },
+      //   title: 'One Link To Showcase All Your Assets',
+      // }}
+      //modalSize={notMobile ? 'wide' : 'compact'}
     />
   );
 }

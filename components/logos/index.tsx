@@ -48,8 +48,8 @@ import {
   RiFileGifLine,
   RiServiceLine,
   RiServiceFill,
-  RiP2PLine,
-  RiP2PFill,
+  RiP2pLine,
+  RiP2pFill,
   RiMoreLine,
   RiMoreFill,
   RiSnapchatLine,
@@ -358,7 +358,7 @@ const LinkIcon = ({ type, line, color, size = '28px', rounded}: LinkIconProps) =
     case 'pay button':
     case 'payment':
     case 'payment button':
-      return line ? <RiP2PLine size={size} /> : <RiP2PFill size={size} />;
+      return line ? <RiP2pLine size={size} /> : <RiP2pFill size={size} />;
     case 'more':
       return line ? <RiMoreLine size={size} /> : <RiMoreFill size={size} />;
     case 'ethereum':

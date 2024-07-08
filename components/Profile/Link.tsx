@@ -28,7 +28,6 @@ import ReactPlayer from 'react-player/lazy';
 import { AVAILABLE_LINKS, SITE_PROFILE_URL, SITE_URL } from 'core/utils/constants';
 import Donate from './Donate';
 import Pay from './Pay';
-import EmbedModal from './EmbedModal';
 import NftGallery from './NftGallery';
 //import { motion, Variants } from 'framer-motion';
 

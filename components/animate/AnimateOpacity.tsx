@@ -7,7 +7,7 @@ interface AnimateOpacityProps {
 }
 
 const AnimateOpacity = ({ children, delay }: AnimateOpacityProps) => (
-  <AnimatePresence mode="popLayout">
+  <AnimatePresence>
     <motion.div
       style={{width: '100%' }}
       initial={{ opacity: 0 }}

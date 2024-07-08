@@ -10,9 +10,9 @@ export const MINT_MESSAGE = 'Final Phase of venom testnet minting will start on'
 export const SITE_URL = 'https://venomid.network/';
 export const SITE_URL_SHORT = 'venomid.network';
 export const VID_IMAGE_API = 'https://img.venomid.network/api/';
-export const SITE_TITLE = 'Venom ID';
+export const SITE_TITLE = 'Venom ID Tools';
 export const SITE_DESCRIPTION =
-  'DNS for the Venom Blockchain, Empower Your Digital Presence with one simple name';
+  'Transfer Tokens and NFTs to any .venom domain name or venom wallet address';
 export const SITE_FULL_DESCRIPTION =
   '.Venom Domains from Venom ID allow you to assign human-readable names to your blockchain and non-blockchain resources like Venom, BTC and ETH addresses, Links and more';
 export const NFT_IMAGE_URL = 'https://ipfs.io/ipfs/QmUvfedgHDXdiMsq5nfLPGLQrR4QAYXHzR5SETBZQ6RGyd';
